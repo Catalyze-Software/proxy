@@ -66,7 +66,7 @@ async fn main() {
 
     loop {
         let now = std::time::Instant::now();
-        let futures = (0..10)
+        let futures = (0..100)
             .map(|_| {
                 canister
                     .query("get_profile")
@@ -85,11 +85,12 @@ async fn main() {
             total_size += std::mem::size_of_val(&result);
         }
 
-        println!("Elapsed: {:?}, Total size: {}", elapsed, total_size);
+        let rate = total_size / elapsed.as_millis() as usize;
+        println!("rate: {:?} bytes/s", rate * 1000);
     }
 }
 
-fn mock_post_profile() -> PostProfile {
+fn _mock_post_profile() -> PostProfile {
     PostProfile {
         username: "test_username".to_string(),
         display_name: "test_display_name".to_string(),
