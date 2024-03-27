@@ -5,10 +5,10 @@ use ic_cdk::{query, update};
 /// Returns the boosted groups
 /// # Returns
 /// * `Vec<(u64, Boost)>` - (boost id, boosted groups)
-#[query]
-fn get_boosted_groups() -> Vec<(u64, Boost)> {
-    BoostCalls::get_boosts_by_subject(Subject::Group(0))
-}
+// #[query]
+// fn get_boosted_groups() -> Vec<(u64, Boost)> {
+//     BoostCalls::get_boosts_by_subject(Subject::Group(0))
+// }
 
 /// Returns the boosted events
 /// # Returns

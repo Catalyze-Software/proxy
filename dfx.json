@@ -7,6 +7,11 @@
       "wasm": "wasm/canister.wasm.gz",
       "build": [
         "bash scripts/build.sh"
+      ],
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
       ]
     }
   },
