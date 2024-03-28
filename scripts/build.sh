@@ -14,4 +14,3 @@ ic-wasm target/wasm32-unknown-unknown/release/canister.wasm -o target/wasm32-unk
 
 # Gzip wasm
 gzip -c target/wasm32-unknown-unknown/release/canister.wasm > wasm/canister.wasm.gz
-

@@ -591,6 +591,7 @@ service : () -> {
   edit_role_permissions : (nat64, text, vec PostPermission) -> (Result);
   get_attending_from_principal : (principal) -> (Result_12) query;
   get_boosted_events : () -> (vec record { nat64; Boost }) query;
+  get_boosted_groups : () -> (vec record { nat64; Boost }) query;
   get_e8s_per_day_boost_cost : () -> (nat64) query;
   get_event : (nat64, nat64) -> (Result_4) query;
   get_event_attendees : (nat64) -> (Result_12) query;
