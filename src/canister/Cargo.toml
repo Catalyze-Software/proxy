@@ -1,7 +1,7 @@
 [package]
 name = "canister"
 version = "0.1.1"
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,19 +10,19 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-candid = "0.10.2"
-ic-cdk = "0.12.0"
+canister_types.workspace = true
+
+candid.workspace = true
+ic-cdk.workspace = true
+ic-ledger-types.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
+
 ic-stable-structures = "0.6.1"
-serde = "1.0"
-serde_json = "1.0"
-
 ic-websocket-cdk = "0.3.4"
-
 ic-cdk-timers = "0.6.0"
-ic-ledger-types = "0.9.0"
-
 email_address = "0.2.4"
 
-canister_types = { path = "../canister_types" }
-# ic_scalable_misc = "1.0.2"
-# ic_scalable_canister = "0.3.1"
+canbench-rs = { version = "0.1.1", optional = true }
+test = { path = "../test" }

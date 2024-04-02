@@ -39,3 +39,9 @@ pub fn wallet_test_id2() -> Principal {
     // Dapps 3
     Principal::from_text("4sz2c-lyaaa-aaaap-aa4pq-cai").expect("Failed to parse canister id")
 }
+
+// https://github.com/dfinity/examples/blob/d451510d1431502a9f1fb1599d02f7b4a9c46511/rust/threshold-ecdsa/src/ecdsa_example_rust/src/lib.rs#L158
+getrandom::register_custom_getrandom!(always_fail);
+pub fn always_fail(_buf: &mut [u8]) -> Result<(), getrandom::Error> {
+    Err(getrandom::Error::UNSUPPORTED)
+}

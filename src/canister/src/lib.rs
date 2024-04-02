@@ -7,6 +7,7 @@ use ic_cdk::query;
 pub static CATALYZE_MULTI_SIG: &str = "fcygz-gqaaa-aaaap-abpaa-cai";
 pub static E8S_PER_DAY_BOOST_COST: u64 = 3500000;
 
+mod benches;
 pub mod calls;
 pub mod helpers;
 pub mod logic;

@@ -1,6 +1,14 @@
 [workspace]
-members = [
-    "src/canister",
-    "src/canister_types",
-    "src/test",
-]
+members = ["src/canister", "src/canister_types", "src/test"]
+
+resolver = "2"
+
+[workspace.dependencies]
+canister_types = { path = "src/canister_types" }
+
+candid = "^0.10"
+ic-cdk = "^0.13"
+ic-ledger-types = "^0.10"
+
+serde = "^1.0"
+serde_json = "^1.0"
