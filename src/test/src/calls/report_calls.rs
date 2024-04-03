@@ -5,7 +5,7 @@ use canister_types::models::{
     api_error::ApiError,
     filter_type::FilterType,
     paged_response::PagedResponse,
-    report::{PostReport, ReportFilter, ReportResponse},
+    report::{PostReport, ReportFilter, ReportResponse, ReportSort},
 };
 use pocket_ic::{query_candid_as, update_candid_as};
 
@@ -26,56 +26,35 @@ pub fn add_report(
     .expect("Failed to call add_report")
 }
 
-pub fn get_report(
-    identifier: Principal,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> ReportResponse {
-    query_candid_as::<(Principal, Principal, Principal), (Result<ReportResponse, ApiError>,)>(
+pub fn get_report(report_id: u64, group_id: u64) -> Result<ReportResponse, ApiError> {
+    query_candid_as::<(u64, u64), (Result<ReportResponse, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "get_report",
-        (identifier, group_identifier, member_identifier),
+        (report_id, group_id),
     )
     .expect("Failed to call get_report from pocket ic")
     .0
-    .expect("Failed to call get_report")
 }
 
 pub fn get_reports(
     limit: usize,
     page: usize,
-    sort: String,
-    filter_type: Vec<FilterType<ReportFilter>>,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> PagedResponse<ReportResponse> {
+    sort: ReportSort,
+    filters: Vec<FilterType<ReportFilter>>,
+    group_id: u64,
+) -> Result<PagedResponse<ReportResponse>, ApiError> {
     query_candid_as::<
-        (
-            usize,
-            usize,
-            String,
-            Vec<FilterType<ReportFilter>>,
-            Principal,
-            Principal,
-        ),
+        (usize, usize, ReportSort, Vec<FilterType<ReportFilter>>, u64),
         (Result<PagedResponse<ReportResponse>, ApiError>,),
     >(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "get_reports",
-        (
-            limit,
-            page,
-            sort,
-            filter_type,
-            group_identifier,
-            member_identifier,
-        ),
+        (limit, page, sort, filters, group_id),
     )
     .expect("Failed to call get_reports from pocket ic")
     .0
-    .expect("Failed to call get_reports")
 }

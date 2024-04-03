@@ -6,6 +6,7 @@ use canister_types::models::{
     friend_request::FriendRequestResponse,
     profile::{PostProfile, ProfileResponse, UpdateProfile},
     relation_type::RelationType,
+    subject::Subject,
     wallet::PostWallet,
 };
 use pocket_ic::{query_candid_as, update_candid_as};
@@ -122,52 +123,40 @@ pub fn remove_wallet_from_profile(wallet_principal: Principal) -> ProfileRespons
     profile_response
 }
 
-pub fn add_starred(identifier: Principal) -> ProfileResponse {
-    let profile_response: ProfileResponse =
-        update_candid_as::<(Principal,), (Result<ProfileResponse, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "add_starred",
-            (identifier,),
-        )
-        .expect("Failed to call add_starred from pocketIC")
-        .0
-        .expect("Failed to add starred");
-
-    profile_response
+pub fn add_starred(subject: Subject) -> Result<ProfileResponse, ApiError> {
+    update_candid_as::<(Subject,), (Result<ProfileResponse, ApiError>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "add_starred",
+        (subject,),
+    )
+    .expect("Failed to call add_starred from pocketIC")
+    .0
 }
 
-pub fn remove_starred(identifier: Principal) -> ProfileResponse {
-    let profile_response: ProfileResponse =
-        update_candid_as::<(Principal,), (Result<ProfileResponse, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "remove_starred",
-            (identifier,),
-        )
-        .expect("Failed to call remove_starred from pocketIC")
-        .0
-        .expect("Failed to remove starred");
-
-    profile_response
+pub fn remove_starred(subject: Subject) -> Result<ProfileResponse, ApiError> {
+    update_candid_as::<(Subject,), (Result<ProfileResponse, ApiError>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "remove_starred",
+        (subject,),
+    )
+    .expect("Failed to call remove_starred from pocketIC")
+    .0
 }
 
-pub fn get_starred_events() -> Vec<Principal> {
-    let starred_events: Vec<Principal> =
-        query_candid_as::<(), (Result<Vec<Principal>, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "get_starred_events",
-            (),
-        )
-        .expect("Failed to call get_starred_events from pocketIC")
-        .0
-        .expect("Failed to get starred events");
-
-    starred_events
+pub fn get_starred_events() -> Vec<Subject> {
+    query_candid_as::<(), (Vec<Subject>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "get_starred_events",
+        (),
+    )
+    .expect("Failed to call get_starred_events from pocketIC")
+    .0
 }
 
 pub fn get_starred_tasks() -> Vec<Principal> {
@@ -185,20 +174,16 @@ pub fn get_starred_tasks() -> Vec<Principal> {
     starred_tasks
 }
 
-pub fn get_starred_groups() -> Vec<Principal> {
-    let starred_groups: Vec<Principal> =
-        query_candid_as::<(), (Result<Vec<Principal>, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "get_starred_groups",
-            (),
-        )
-        .expect("Failed to call get_starred_groups from pocketIC")
-        .0
-        .expect("Failed to get starred groups");
-
-    starred_groups
+pub fn get_starred_groups() -> Vec<Subject> {
+    query_candid_as::<(), (Vec<Subject>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "get_starred_groups",
+        (),
+    )
+    .expect("Failed to call get_starred_groups from pocketIC")
+    .0
 }
 
 pub fn add_friend_request(to: Principal, message: String) -> FriendRequestResponse {

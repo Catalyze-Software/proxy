@@ -38,20 +38,16 @@ pub fn add_event(
     event_response
 }
 
-pub fn get_event(identifier: Principal, group_identifier: Option<Principal>) -> EventResponse {
-    let event_response: EventResponse =
-        query_candid_as::<(Principal, Option<Principal>), (Result<EventResponse, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "get_event",
-            (identifier, group_identifier),
-        )
-        .expect("Failed to call get_event from pocket ic")
-        .0
-        .expect("Failed to call get_event");
-
-    event_response
+pub fn get_event(event_id: u64, group_id: u64) -> Result<EventResponse, ApiError> {
+    query_candid_as::<(u64, u64), (Result<EventResponse, ApiError>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "get_event",
+        (event_id, group_id),
+    )
+    .expect("Failed to call get_event from pocket ic")
+    .0
 }
 
 // deprecated
@@ -92,85 +88,56 @@ pub fn get_events(
     paged_response
 }
 
-pub fn get_events_count(group_identifiers: Vec<Principal>) -> Vec<(Principal, usize)> {
-    let events_count: Vec<(Principal, usize)> =
-        query_candid_as::<(Vec<Principal>,), (Result<Vec<(Principal, usize)>, ApiError>,)>(
-            &ENV.pic,
-            ENV.canister_id,
-            SENDER.with(|s| s.borrow().unwrap()),
-            "get_events_count",
-            (group_identifiers,),
-        )
-        .expect("Failed to call get_events_count from pocket ic")
-        .0
-        .expect("Failed to call get_events_count");
-
-    events_count
+pub fn get_events_count(group_ids: Vec<u64>) -> Vec<(Principal, u64)> {
+    query_candid_as::<(Vec<u64>,), (Vec<(Principal, u64)>,)>(
+        &ENV.pic,
+        ENV.canister_id,
+        SENDER.with(|s| s.borrow().unwrap()),
+        "get_events_count",
+        (group_ids,),
+    )
+    .expect("Failed to call get_events_count from pocket ic")
+    .0
 }
 
 pub fn edit_event(
-    identifier: Principal,
-    value: UpdateEvent,
-    group_identifier: Principal,
-    member_identifier: Principal,
-    event_attendee_canister: Principal,
-) -> EventResponse {
-    let event_response: EventResponse = update_candid_as::<
-        (Principal, UpdateEvent, Principal, Principal, Principal),
-        (Result<EventResponse, ApiError>,),
-    >(
+    event_id: u64,
+    group_id: u64,
+    update_event: UpdateEvent,
+) -> Result<EventResponse, ApiError> {
+    update_candid_as::<(u64, u64, UpdateEvent), (Result<EventResponse, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "edit_event",
-        (
-            identifier,
-            value,
-            group_identifier,
-            member_identifier,
-            event_attendee_canister,
-        ),
+        (event_id, group_id, update_event),
     )
     .expect("Failed to call edit_event from pocket ic")
     .0
-    .expect("Failed to call edit_event");
-
-    event_response
 }
 
-pub fn delete_event(
-    identifier: Principal,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> () {
-    update_candid_as::<(Principal, Principal, Principal), (Result<(), ApiError>,)>(
+pub fn delete_event(event_id: u64, group_id: u64) -> Result<(), ApiError> {
+    update_candid_as::<(u64, u64), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "delete_event",
-        (identifier, group_identifier, member_identifier),
+        (event_id, group_id),
     )
     .expect("Failed to call delete_event from pocket ic")
     .0
-    .expect("Failed to call delete_event");
 }
 
-pub fn cancel_event(
-    identifier: Principal,
-    reason: String,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> () {
-    update_candid_as::<(Principal, String, Principal, Principal), (Result<(), ApiError>,)>(
+pub fn cancel_event(event_id: u64, group_id: u64, reason: String) -> Result<(), ApiError> {
+    update_candid_as::<(u64, u64), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "cancel_event",
-        (identifier, reason, group_identifier, member_identifier),
+        (event_id, group_id),
     )
     .expect("Failed to call cancel_event from pocket ic")
     .0
-    .expect("Failed to call cancel_event");
 }
 
 // deprecated
@@ -180,85 +147,60 @@ pub fn cancel_event(
 //     attendee_count: usize,
 // ) -> Result<(), bool>
 
-pub fn join_event(
-    event_identifier: Principal,
-    group_identifier: Principal,
-) -> (Principal, Attendee) {
-    update_candid_as::<(Principal, Principal), (Result<(Principal, Attendee), ApiError>,)>(
+pub fn join_event(event_id: u64, group_id: u64) -> Result<JoinedAttendeeResponse, ApiError> {
+    update_candid_as::<(u64, u64), (Result<JoinedAttendeeResponse, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "join_event",
-        (event_identifier, group_identifier),
+        (event_id, group_id),
     )
     .expect("Failed to call join_event from pocket ic")
     .0
-    .expect("Failed to call join_event")
 }
 
 pub fn invite_to_event(
-    event_identifier: Principal,
+    event_id: u64,
+    group_id: u64,
     attendee_principal: Principal,
-    member_identifier: Principal,
-    group_identifier: Principal,
-) -> (Principal, Attendee) {
-    update_candid_as::<
-        (Principal, Principal, Principal, Principal),
-        (Result<(Principal, Attendee), ApiError>,),
-    >(
+) -> Result<InviteAttendeeResponse, ApiError> {
+    update_candid_as::<(u64, u64, Principal), (Result<InviteAttendeeResponse, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "invite_to_event",
-        (
-            event_identifier,
-            attendee_principal,
-            member_identifier,
-            group_identifier,
-        ),
+        (event_id, group_id, attendee_principal),
     )
     .expect("Failed to call invite_to_event from pocket ic")
     .0
-    .expect("Failed to call invite_to_event")
 }
 
 pub fn accept_user_request_event_invite(
+    event_id: u64,
+    group_id: u64,
     attendee_principal: Principal,
-    event_identifier: Principal,
-    member_identifier: Principal,
-    group_identifier: Principal,
-) -> (Principal, Attendee) {
-    update_candid_as::<
-        (Principal, Principal, Principal, Principal),
-        (Result<(Principal, Attendee), ApiError>,),
-    >(
+) -> Result<JoinedAttendeeResponse, ApiError> {
+    update_candid_as::<(u64, u64, Principal), (Result<JoinedAttendeeResponse, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "accept_user_request_event_invite",
-        (
-            attendee_principal,
-            event_identifier,
-            member_identifier,
-            group_identifier,
-        ),
+        (event_id, group_id, attendee_principal),
     )
     .expect("Failed to call accept_user_request_event_invite from pocket ic")
     .0
-    .expect("Failed to call accept_user_request_event_invite")
 }
 
-pub fn accept_owner_request_event_invite(event_identifier: Principal) -> (Principal, Attendee) {
-    update_candid_as::<(Principal,), (Result<(Principal, Attendee), ApiError>,)>(
+pub fn accept_owner_request_event_invite(event_id: u64) -> Result<Attendee, ApiError> {
+    update_candid_as::<(u64,), (Result<Attendee, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "accept_owner_request_event_invite",
-        (event_identifier,),
+        (event_id,),
     )
     .expect("Failed to call accept_owner_request_event_invite from pocket ic")
     .0
-    .expect("Failed to call accept_owner_request_event_invite")
 }
 
 // deprecated
@@ -267,17 +209,16 @@ pub fn accept_owner_request_event_invite(event_identifier: Principal) -> (Princi
 // deprecated
 // pub fn get_event_invites_count(event_identifiers: Vec<Principal>) -> Vec<(Principal, usize)>
 
-pub fn get_event_attendees(event_identifier: Principal) -> Vec<JoinedAttendeeResponse> {
-    query_candid_as::<(Principal,), (Result<Vec<JoinedAttendeeResponse>, ApiError>,)>(
+pub fn get_event_attendees(event_id: u64) -> Result<Vec<JoinedAttendeeResponse>, ApiError> {
+    query_candid_as::<(u64,), (Result<Vec<JoinedAttendeeResponse>, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "get_event_attendees",
-        (event_identifier,),
+        (event_id,),
     )
     .expect("Failed to call get_event_attendees from pocket ic")
     .0
-    .expect("Failed to call get_event_attendees")
 }
 
 pub fn get_self_events() -> (Principal, Attendee) {
@@ -306,96 +247,75 @@ pub fn get_attending_from_principal(principal: Principal) -> Vec<JoinedAttendeeR
     .expect("Failed to call get_attending_from_principal")
 }
 
-pub fn leave_event(event_identifier: Principal) -> () {
-    update_candid_as::<(Principal,), (Result<(), ApiError>,)>(
+pub fn leave_event(event_id: u64) -> Result<(), ApiError> {
+    update_candid_as::<(u64,), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "leave_event",
-        (event_identifier,),
+        (event_id,),
     )
     .expect("Failed to call leave_event from pocket ic")
     .0
-    .expect("Failed to call leave_event");
 }
 
-pub fn remove_event_invite(event_identifier: Principal) -> () {
-    update_candid_as::<(Principal,), (Result<(), ApiError>,)>(
+pub fn remove_event_invite(event_id: u64) -> Result<(), ApiError> {
+    update_candid_as::<(u64,), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "remove_event_invite",
-        (event_identifier,),
+        (event_id,),
     )
     .expect("Failed to call remove_event_invite from pocket ic")
     .0
-    .expect("Failed to call remove_event_invite");
 }
 
 pub fn remove_attendee_from_event(
+    event_id: u64,
+    group_id: u64,
     attendee_principal: Principal,
-    event_identifier: Principal,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> () {
-    update_candid_as::<(Principal, Principal, Principal, Principal), (Result<(), ApiError>,)>(
+) -> Result<(), ApiError> {
+    update_candid_as::<(u64, u64, Principal), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "remove_attendee_from_event",
-        (
-            attendee_principal,
-            event_identifier,
-            group_identifier,
-            member_identifier,
-        ),
+        (event_id, group_id, attendee_principal),
     )
     .expect("Failed to call remove_attendee_from_event from pocket ic")
     .0
-    .expect("Failed to call remove_attendee_from_event");
 }
 
 pub fn remove_attendee_invite_from_event(
+    event_id: u64,
+    group_id: u64,
     attendee_principal: Principal,
-    event_identifier: Principal,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> () {
-    update_candid_as::<(Principal, Principal, Principal, Principal), (Result<(), ApiError>,)>(
+) -> Result<(), ApiError> {
+    update_candid_as::<(u64, u64, Principal), (Result<(), ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "remove_attendee_invite_from_event",
-        (
-            attendee_principal,
-            event_identifier,
-            group_identifier,
-            member_identifier,
-        ),
+        (event_id, group_id, attendee_principal),
     )
     .expect("Failed to call remove_attendee_invite_from_event from pocket ic")
     .0
-    .expect("Failed to call remove_attendee_invite_from_event");
 }
 
 pub fn get_event_invites(
-    event_identifier: Principal,
-    group_identifier: Principal,
-    member_identifier: Principal,
-) -> Vec<InviteAttendeeResponse> {
-    query_candid_as::<
-        (Principal, Principal, Principal),
-        (Result<Vec<InviteAttendeeResponse>, ApiError>,),
-    >(
+    event_id: u64,
+    group_id: u64,
+) -> Result<Vec<InviteAttendeeResponse>, ApiError> {
+    query_candid_as::<(u64, u64), (Result<Vec<InviteAttendeeResponse>, ApiError>,)>(
         &ENV.pic,
         ENV.canister_id,
         SENDER.with(|s| s.borrow().unwrap()),
         "get_event_invites",
-        (event_identifier, group_identifier, member_identifier),
+        (event_id, group_id),
     )
     .expect("Failed to call get_event_invites from pocket ic")
     .0
-    .expect("Failed to call get_event_invites")
 }
 
 // deprecated
