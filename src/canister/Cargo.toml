@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 canister_types.workspace = true
+test.workspace = true
 
 candid.workspace = true
 ic-cdk.workspace = true
@@ -25,4 +26,4 @@ ic-cdk-timers = "0.6.0"
 email_address = "0.2.4"
 
 canbench-rs = { version = "0.1.1", optional = true }
-test = { path = "../test" }
+# test = { path = "../test" }

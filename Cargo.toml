@@ -1,10 +1,13 @@
 [workspace]
 members = ["src/canister", "src/canister_types", "src/test"]
+# members = ["src/canister", "src/canister_types"]
+# exclude = ["src/test"]
 
 resolver = "2"
 
 [workspace.dependencies]
 canister_types = { path = "src/canister_types" }
+test = { path = "src/test" }
 
 candid = "^0.10"
 ic-cdk = "^0.13"
