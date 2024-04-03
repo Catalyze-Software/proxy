@@ -1,30 +1,34 @@
 // Flow 1
 
 use crate::{
-    calls::profile_calls::{
-        add_profile, approve_code_of_conduct, approve_privacy_policy, approve_terms_of_service,
+    calls::{
+        group_calls::add_group,
+        profile_calls::{
+            add_profile, approve_code_of_conduct, approve_privacy_policy, approve_terms_of_service,
+        },
     },
     mocks::{
-        models::mock_post_profile,
+        models::{mock_post_group, mock_post_profile},
         principals::{canister_test_id, member_test_id},
     },
-    SENDER,
+    GROUP_ID, SENDER,
 };
 use candid::Principal;
-use canister_types::models::profile::{PostProfile, ProfileResponse};
+use canister_types::models::{
+    group::{GroupResponse, PostGroup},
+    profile::{PostProfile, ProfileResponse},
+};
 
 pub fn flow1() {
     // Set sender principal
     SENDER.with(|s| *s.borrow_mut() = Some(member_test_id()));
-    // Deprecated
-    let member_canister: Principal = canister_test_id();
 
     /*
      * Add profile
      */
     let post_profile: PostProfile = mock_post_profile();
 
-    let profile_response: ProfileResponse = add_profile(post_profile, member_canister);
+    let profile_response: ProfileResponse = add_profile(post_profile);
 
     // The `principal` field of the response should be the same as the sender.
     assert_eq!(
@@ -62,10 +66,9 @@ pub fn flow1() {
     /*
      * Add group
      */
-    // let post_group: PostGroup = mock_post_group();
-    // let account_identifier: Option<String> = None;
+    let post_group: PostGroup = mock_post_group();
 
     // TODO:
-    // let group_response: GroupResponse = add_group(post_group, account_identifier);
-    // GROUP_ID.with(|g| *g.borrow_mut() = Some(group_response.identifier));
+    let group_response: GroupResponse = add_group(post_group);
+    GROUP_ID.with(|g| *g.borrow_mut() = Some(group_response.id));
 }
