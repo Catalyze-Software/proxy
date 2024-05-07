@@ -22,7 +22,7 @@ use super::{
 
 impl_storable_for!(Profile);
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize, Serialize)]
 pub struct Profile {
     pub username: String,
     pub display_name: String,
@@ -56,40 +56,6 @@ pub struct Profile {
 }
 
 impl Profile {
-    pub fn default() -> Self {
-        Self {
-            username: Default::default(),
-            display_name: Default::default(),
-            application_role: Default::default(),
-            first_name: Default::default(),
-            last_name: Default::default(),
-            privacy: Default::default(),
-            about: Default::default(),
-            email: Default::default(),
-            date_of_birth: Default::default(),
-            city: Default::default(),
-            state_or_province: Default::default(),
-            country: Default::default(),
-            profile_image: Default::default(),
-            banner_image: Default::default(),
-            skills: Default::default(),
-            interests: Default::default(),
-            causes: Default::default(),
-            website: Default::default(),
-            code_of_conduct: Default::default(),
-            wallets: Default::default(),
-            starred: Default::default(),
-            pinned: Default::default(),
-            relations: Default::default(),
-            extra: Default::default(),
-            updated_on: Default::default(),
-            created_on: Default::default(),
-            notification_id: Default::default(),
-            privacy_policy: None,
-            terms_of_service: None,
-        }
-    }
-
     pub fn update(self, profile: UpdateProfile) -> Self {
         Self {
             username: self.username,
@@ -285,8 +251,8 @@ impl ProfileResponse {
     }
 
     pub fn from_result(
-        profile_result: Result<(Principal, Profile), ApiError>,
-    ) -> Result<Self, ApiError> {
+        profile_result: Result<(Principal, Profile), Box<ApiError>>,
+    ) -> Result<Self, Box<ApiError>> {
         match profile_result {
             Err(err) => Err(err),
             Ok((principal, profile)) => {

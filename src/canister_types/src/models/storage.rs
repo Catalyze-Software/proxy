@@ -49,17 +49,12 @@ pub struct Manifest {
     pub entries: Vec<ChunkData>,
 }
 
-#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, CandidType, Serialize, Deserialize)]
 pub enum CanisterStorage {
+    #[default]
     None,
     Chunk(ChunkData),
     Manifest(Manifest),
-}
-
-impl Default for CanisterStorage {
-    fn default() -> Self {
-        CanisterStorage::None
-    }
 }
 
 impl fmt::Display for CanisterStorage {

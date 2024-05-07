@@ -10,25 +10,15 @@ use super::invite_type::InviteType;
 
 impl_storable_for!(Attendee);
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Default, Debug, CandidType, Deserialize, Serialize)]
 pub struct Attendee {
     pub joined: HashMap<u64, AttendeeJoin>,
     pub invites: HashMap<u64, AttendeeInvite>,
 }
 
 impl Attendee {
-    pub fn default() -> Self {
-        Self {
-            joined: Default::default(),
-            invites: Default::default(),
-        }
-    }
-
     pub fn new() -> Self {
-        Self {
-            joined: Default::default(),
-            invites: Default::default(),
-        }
+        Self::default()
     }
 
     pub fn add_joined(&mut self, event_id: u64, group_id: u64) {
@@ -43,7 +33,7 @@ impl Attendee {
     }
 
     pub fn get_joined(&self, event_id: &u64) -> Option<AttendeeJoin> {
-        self.joined.get(&event_id).cloned()
+        self.joined.get(event_id).cloned()
     }
 
     pub fn get_multiple_joined(&self) -> Vec<(u64, AttendeeJoin)> {
@@ -89,7 +79,7 @@ impl Attendee {
     }
 
     pub fn is_event_invited(&self, event_id: &u64) -> bool {
-        self.invites.contains_key(&event_id)
+        self.invites.contains_key(event_id)
     }
 
     pub fn is_event_joined(&self, event_id: &u64) -> bool {

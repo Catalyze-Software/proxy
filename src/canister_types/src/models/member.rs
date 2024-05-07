@@ -12,25 +12,15 @@ pub type GroupIdentifier = Principal;
 
 impl_storable_for!(Member);
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize, Serialize)]
 pub struct Member {
     pub joined: HashMap<u64, Join>,
     pub invites: HashMap<u64, MemberInvite>,
 }
 
 impl Member {
-    pub fn default() -> Self {
-        Self {
-            joined: Default::default(),
-            invites: Default::default(),
-        }
-    }
-
     pub fn new() -> Self {
-        Self {
-            joined: Default::default(),
-            invites: Default::default(),
-        }
+        Self::default()
     }
 
     pub fn add_joined(&mut self, group_id: u64, roles: Vec<String>) {
@@ -56,9 +46,9 @@ impl Member {
         self.joined.remove(&group_id);
     }
 
-    pub fn add_group_role(&mut self, group_id: &u64, role: &String) {
+    pub fn add_group_role(&mut self, group_id: &u64, role: &str) {
         if let Some(group) = self.joined.get_mut(group_id) {
-            group.roles.push(role.clone());
+            group.roles.push(role.to_string());
         }
     }
 
@@ -128,7 +118,7 @@ impl Member {
     }
 
     pub fn is_group_invited(&self, group_id: &u64) -> bool {
-        self.invites.contains_key(&group_id)
+        self.invites.contains_key(group_id)
     }
 
     pub fn is_group_joined(&self, group_id: &u64) -> bool {

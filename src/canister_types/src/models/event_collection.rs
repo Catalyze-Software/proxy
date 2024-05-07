@@ -5,14 +5,14 @@ use crate::impl_storable_for;
 
 impl_storable_for!(EventCollection);
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize, Serialize)]
 pub struct EventCollection {
     pub events: Vec<u64>,
 }
 
 impl EventCollection {
     pub fn new() -> Self {
-        Self { events: Vec::new() }
+        Self::default()
     }
 
     pub fn get_event_ids(&self) -> Vec<u64> {

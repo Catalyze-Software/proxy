@@ -3,23 +3,20 @@ use core::fmt;
 use candid::CandidType;
 use serde::{Deserialize, Serialize};
 
-#[derive(CandidType, Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(
+    CandidType, Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Default,
+)]
 pub enum ApplicationRole {
     Owner,
     Admin,
     Moderator,
     Leader,
+    #[default]
     Member,
     Watcher,
     Guest,
     Blocked,
     Banned,
-}
-
-impl Default for ApplicationRole {
-    fn default() -> Self {
-        ApplicationRole::Member
-    }
 }
 
 impl fmt::Display for ApplicationRole {
@@ -31,7 +28,7 @@ impl fmt::Display for ApplicationRole {
             Moderator => write!(f, "Moderator"),
             Leader => write!(f, "Leader"),
             Member => write!(f, "Member"),
-            Watcher => write!(f, "OwneWatcherr"),
+            Watcher => write!(f, "OwnerWatcher"),
             Guest => write!(f, "Guest"),
             Blocked => write!(f, "Blocked"),
             Banned => write!(f, "Banned"),

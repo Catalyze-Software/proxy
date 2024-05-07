@@ -3,8 +3,9 @@ use std::fmt;
 use candid::CandidType;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, CandidType, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, CandidType, Deserialize)]
 pub enum Location {
+    #[default]
     None,
     Physical(PhysicalLocation),
     Digital(String),
@@ -27,12 +28,6 @@ pub struct Address {
 pub struct MultiLocation {
     pub physical: PhysicalLocation,
     pub digital: String,
-}
-
-impl Default for Location {
-    fn default() -> Self {
-        Location::None
-    }
 }
 
 impl fmt::Display for Location {

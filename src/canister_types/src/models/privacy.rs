@@ -3,8 +3,11 @@ use std::fmt;
 use candid::{CandidType, Principal};
 use serde::{Deserialize, Serialize};
 
-#[derive(CandidType, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Debug)]
+#[derive(
+    CandidType, Clone, Default, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Debug,
+)]
 pub enum Privacy {
+    #[default]
     Public,
     Private,
     InviteOnly,
@@ -41,12 +44,6 @@ pub struct TokenGated {
     pub standard: String,
     pub principal: Principal,
     pub amount: u64,
-}
-
-impl Default for Privacy {
-    fn default() -> Self {
-        Privacy::Public
-    }
 }
 
 impl fmt::Display for Privacy {

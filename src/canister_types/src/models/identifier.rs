@@ -5,6 +5,8 @@ use serde::Serialize;
 
 use super::api_error::ApiError;
 
+// TODO: Remove allow once clean deployment will be available
+#[allow(clippy::derived_hash_with_manual_eq)]
 #[derive(Clone, Debug, CandidType, Serialize, Deserialize, Eq, Hash)]
 pub struct Identifier {
     id: u64,
@@ -30,10 +32,11 @@ pub enum IdentifierKind {
 }
 
 impl Identifier {
-    pub fn new(id: u64, principal: Principal, kind: String) -> Result<Identifier, ApiError> {
+    pub fn new(id: u64, principal: Principal, kind: String) -> Result<Identifier, Box<ApiError>> {
         if kind.len() != 3 {
             return Err(ApiError::bad_request()
-                .add_message("Invalid identifier: 'kind' length needs to be 3"));
+                .add_message("Invalid identifier: 'kind' length needs to be 3")
+                .boxed());
         }
 
         Ok(Identifier {
@@ -83,25 +86,26 @@ impl Identifier {
         new_identifier.unwrap()
     }
 
-    pub fn to_principal(&self) -> Result<Principal, ApiError> {
+    pub fn to_principal(&self) -> Result<Principal, Box<ApiError>> {
         if self.kind.len() != 3 {
             return Err(ApiError::serialize()
-                .add_message("Invalid identifier: 'kind' length needs to be 3"));
+                .add_message("Invalid identifier: 'kind' length needs to be 3")
+                .boxed());
         }
         let mut array = Vec::new();
         array.extend_from_slice(b"\x0Acat");
-        array.extend_from_slice(&self.kind.as_bytes().to_vec());
-        array.extend_from_slice(&self.principal.as_slice());
+        array.extend_from_slice(self.kind.as_bytes());
+        array.extend_from_slice(self.principal.as_slice());
         array.extend_from_slice(&Self::to_u32_be_bytes(self.id));
         Ok(Principal::from_slice(&array))
     }
 
     pub fn id(&self) -> u64 {
-        self.id.clone()
+        self.id
     }
 
     pub fn canister(&self) -> Principal {
-        self.principal.clone()
+        self.principal
     }
 
     pub fn kind(&self) -> String {
@@ -109,7 +113,7 @@ impl Identifier {
     }
 
     pub fn is_valid(&self) -> bool {
-        self.valid.clone()
+        self.valid
     }
 
     fn to_u32_be_bytes(n: u64) -> [u8; 4] {
@@ -118,8 +122,8 @@ impl Identifier {
 
     fn from32bits(ba: &[u8]) -> u64 {
         let mut value = 0;
-        for i in 0..4 {
-            value = (value << 8) | (ba[i] as u64);
+        for item in ba.iter().take(4) {
+            value = (value << 8) | (*item as u64);
         }
         value
     }
@@ -137,19 +141,20 @@ impl From<Principal> for Identifier {
 
             let index_bytes = p.drain(p.len() - 4..).collect::<Vec<u8>>();
             let index = Self::from32bits(&index_bytes);
+
             return Identifier {
                 id: index,
                 principal: Principal::from_slice(&p),
                 kind,
                 valid: true,
             };
-        } else {
-            return Identifier {
-                id: 0,
-                principal,
-                kind: "principal".to_string(),
-                valid: false,
-            };
+        }
+
+        Identifier {
+            id: 0,
+            principal,
+            kind: "principal".to_string(),
+            valid: false,
         }
     }
 }
@@ -159,9 +164,7 @@ impl fmt::Display for Identifier {
         write!(
             f,
             "id: {} - canister: {} - kind: {}",
-            self.id.to_string(),
-            self.principal.to_string(),
-            self.kind,
+            self.id, self.principal, self.kind,
         )
     }
 }

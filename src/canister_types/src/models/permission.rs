@@ -3,21 +3,11 @@ use std::fmt;
 use candid::{CandidType, Deserialize};
 use serde::Serialize;
 
-#[derive(Clone, CandidType, Serialize, Deserialize, Debug)]
+#[derive(Clone, Default, CandidType, Serialize, Deserialize, Debug)]
 pub struct Permission {
     name: String,
     protected: bool,
     actions: PermissionActions,
-}
-
-impl Default for Permission {
-    fn default() -> Self {
-        Self {
-            name: Default::default(),
-            protected: false,
-            actions: Default::default(),
-        }
-    }
 }
 
 impl From<PostPermission> for Permission {
@@ -44,7 +34,7 @@ impl Permission {
     }
 
     pub fn actions(&self) -> PermissionActions {
-        self.actions.clone()
+        self.actions
     }
 }
 
@@ -54,23 +44,12 @@ pub struct PostPermission {
     actions: PermissionActions,
 }
 
-#[derive(Clone, Copy, CandidType, Serialize, Deserialize, Debug)]
+#[derive(Clone, Copy, Default, CandidType, Serialize, Deserialize, Debug)]
 pub struct PermissionActions {
     write: bool,
     read: bool,
     edit: bool,
     delete: bool,
-}
-
-impl Default for PermissionActions {
-    fn default() -> Self {
-        Self {
-            write: false,
-            read: false,
-            edit: false,
-            delete: false,
-        }
-    }
 }
 
 impl PermissionActions {

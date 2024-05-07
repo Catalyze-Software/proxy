@@ -24,11 +24,13 @@ impl DateRange {
     }
 
     pub fn is_within(&self, date: u64) -> bool {
-        if self.end_date == 0 {
-            return date >= self.start_date;
-        } else {
-            return date >= self.start_date && date <= self.end_date;
+        let is_within = date >= self.start_date;
+
+        if self.end_date != 0 {
+            return is_within && date <= self.end_date;
         }
+
+        is_within
     }
 
     pub fn is_outside(&self, date: u64) -> bool {

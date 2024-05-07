@@ -92,6 +92,10 @@ impl ApiError {
         self.method_name = Some(method_name.to_string());
         self
     }
+
+    pub fn boxed(&self) -> Box<Self> {
+        Box::new(self.clone())
+    }
 }
 
 #[derive(Clone, CandidType, Debug, Deserialize, Serialize)]

@@ -89,9 +89,9 @@ impl ReportResponse {
     }
 
     pub fn from_result(
-        report_result: Result<(u64, Report), ApiError>,
+        report_result: Result<(u64, Report), Box<ApiError>>,
         subject_response: SubjectResponse,
-    ) -> Result<Self, ApiError> {
+    ) -> Result<Self, Box<ApiError>> {
         match report_result {
             Err(err) => Err(err),
             Ok((id, report)) => Ok(Self::new(id, report, subject_response)),
@@ -107,11 +107,13 @@ pub enum ReportSort {
     CreatedOn(SortDirection),
 }
 
-impl ReportSort {
-    pub fn default() -> Self {
+impl Default for ReportSort {
+    fn default() -> Self {
         ReportSort::CreatedOn(SortDirection::Asc)
     }
+}
 
+impl ReportSort {
     pub fn sort(&self, reports: HashMap<u64, Report>) -> Vec<(u64, Report)> {
         let mut reports: Vec<(u64, Report)> = reports.into_iter().collect();
         use ReportSort::*;
@@ -138,20 +140,15 @@ impl ReportSort {
     }
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize)]
 pub enum ReportFilter {
+    #[default]
     None,
     Subject(Subject),
     GroupId(u64),
     SubjectType(SubjectType),
     CreatedOn(DateRange),
     ReportedBy(Principal),
-}
-
-impl Default for ReportFilter {
-    fn default() -> Self {
-        ReportFilter::None
-    }
 }
 
 impl ReportFilter {

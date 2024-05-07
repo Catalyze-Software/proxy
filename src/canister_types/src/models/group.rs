@@ -47,8 +47,8 @@ pub struct Group {
     pub created_on: u64,
 }
 
-impl Group {
-    pub fn default() -> Self {
+impl Default for Group {
+    fn default() -> Self {
         Self {
             name: Default::default(),
             description: Default::default(),
@@ -71,7 +71,9 @@ impl Group {
             special_members: Default::default(),
         }
     }
+}
 
+impl Group {
     pub fn from(group: PostGroup) -> Self {
         Self {
             name: group.name,
@@ -278,12 +280,12 @@ impl GroupResponse {
     }
 
     pub fn from_result(
-        group_result: Result<(u64, Group), ApiError>,
+        group_result: Result<(u64, Group), Box<ApiError>>,
         boosted: Option<Boost>,
         events_count: u64,
         members_count: u64,
         caller_data: Option<GroupCallerData>,
-    ) -> Result<Self, ApiError> {
+    ) -> Result<Self, Box<ApiError>> {
         match group_result {
             Err(err) => Err(err),
             Ok((id, group)) => Ok(Self::new(
@@ -306,11 +308,13 @@ pub enum GroupSort {
     MemberCount(SortDirection),
 }
 
-impl GroupSort {
-    pub fn default() -> Self {
+impl Default for GroupSort {
+    fn default() -> Self {
         GroupSort::CreatedOn(SortDirection::Asc)
     }
+}
 
+impl GroupSort {
     pub fn sort(
         &self,
         groups: HashMap<u64, Group>,
@@ -332,24 +336,24 @@ impl GroupSort {
             UpdatedOn(Desc) => groups.sort_by(|(_, a), (_, b)| b.updated_on.cmp(&a.updated_on)),
             MemberCount(Asc) => groups.sort_by(|(a_id, a), (b_id, b)| {
                 let a_members = group_members
-                    .get(&a_id)
+                    .get(a_id)
                     .map(|m| m.get_member_count())
-                    .unwrap_or(0);
+                    .unwrap_or_default();
                 let b_members = group_members
-                    .get(&b_id)
+                    .get(b_id)
                     .map(|m| m.get_member_count())
-                    .unwrap_or(0);
+                    .unwrap_or_default();
                 a_members.cmp(&b_members)
             }),
             MemberCount(Desc) => groups.sort_by(|(a_id, a), (b_id, b)| {
                 let a_members = group_members
-                    .get(&a_id)
+                    .get(a_id)
                     .map(|m| m.get_member_count())
-                    .unwrap_or(0);
+                    .unwrap_or_default();
                 let b_members = group_members
-                    .get(&b_id)
+                    .get(b_id)
                     .map(|m| m.get_member_count())
-                    .unwrap_or(0);
+                    .unwrap_or_default();
                 b_members.cmp(&a_members)
             }),
         }
@@ -366,8 +370,9 @@ pub struct GroupsCount {
     pub new: u64,
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize)]
 pub enum GroupFilter {
+    #[default]
     None,
     Name(String),
     Owner(Principal),
@@ -377,19 +382,13 @@ pub enum GroupFilter {
     CreatedOn(DateRange),
 }
 
-impl Default for GroupFilter {
-    fn default() -> Self {
-        GroupFilter::None
-    }
-}
-
 impl GroupFilter {
     pub fn is_match(&self, id: &u64, group: &Group) -> bool {
         match self {
             GroupFilter::None => true,
             GroupFilter::Name(name) => group.name.to_lowercase().contains(&name.to_lowercase()),
             GroupFilter::Owner(owner) => group.owner == *owner,
-            GroupFilter::Ids(ids) => ids.contains(&id),
+            GroupFilter::Ids(ids) => ids.contains(id),
             GroupFilter::Tag(tag) => group.tags.contains(tag),
             GroupFilter::UpdatedOn(range) => {
                 if range.end_date() > 0 {

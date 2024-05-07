@@ -5,7 +5,7 @@ use crate::impl_storable_for;
 
 impl_storable_for!(MemberCollection);
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, CandidType, Deserialize, Serialize)]
 pub struct MemberCollection {
     members: Vec<Principal>,
     invites: Vec<Principal>,
@@ -13,10 +13,7 @@ pub struct MemberCollection {
 
 impl MemberCollection {
     pub fn new() -> Self {
-        Self {
-            members: Vec::new(),
-            invites: Vec::new(),
-        }
+        Self::default()
     }
 
     pub fn get_member_principals(&self) -> Vec<Principal> {

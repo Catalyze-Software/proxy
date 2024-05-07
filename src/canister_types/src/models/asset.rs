@@ -5,17 +5,12 @@ use serde::Serialize;
 
 use super::storage::CanisterStorage;
 
-#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, CandidType, Serialize, Deserialize)]
 pub enum Asset {
+    #[default]
     None,
     CanisterStorage(CanisterStorage),
     Url(String),
-}
-
-impl Default for Asset {
-    fn default() -> Self {
-        Asset::None
-    }
 }
 
 impl fmt::Display for Asset {

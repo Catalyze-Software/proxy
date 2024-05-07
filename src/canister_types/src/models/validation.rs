@@ -20,19 +20,14 @@ pub struct ValidationResponse {
 #[derive(Clone, Debug, Default, CandidType, Serialize, Deserialize)]
 pub struct ValidateField(pub ValidationType, pub String);
 
-#[derive(Clone, Debug, CandidType, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, CandidType, Serialize, Deserialize)]
 pub enum ValidationType {
+    #[default]
     None,
     StringLength(String, usize, usize),
     DateRange(DateRange),
     Email(String),
     Count(usize, usize, usize),
-}
-
-impl Default for ValidationType {
-    fn default() -> Self {
-        ValidationType::None
-    }
 }
 
 impl fmt::Display for ValidationType {
