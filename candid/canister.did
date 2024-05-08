@@ -834,6 +834,9 @@ service : () -> {
   get_self_member : () -> (Result_2) query;
   get_starred_by_subject_type : (SubjectType) -> (vec nat64) query;
   get_unread_notifications : () -> (vec NotificationResponse) query;
+  graph_event_attendee_rewards : () -> (vec record { nat64; nat64 }) query;
+  graph_member_activity_rewards : () -> (vec record { nat64; nat64 }) query;
+  graph_member_count_rewards : () -> (vec record { nat64; nat64 }) query;
   http_request : (HttpRequest) -> (HttpResponse) query;
   invite_to_event : (nat64, nat64, principal) -> (Result_29);
   invite_to_group : (nat64, principal) -> (Result_2);

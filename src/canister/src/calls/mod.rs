@@ -6,4 +6,5 @@ pub mod log_calls;
 pub mod notification_calls;
 pub mod profile_calls;
 pub mod report_calls;
+pub mod reward_calls;
 pub mod websocket_calls;

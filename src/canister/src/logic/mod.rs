@@ -10,3 +10,4 @@ pub mod notification_logic;
 pub mod profile_logic;
 pub mod report_logic;
 pub mod websocket_logic;
+pub mod reward_logic;
