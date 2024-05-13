@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Fixed
+
+- Fix not storing `mark_as_read` for notifications
+
 ## [0.1.6]
 
 ### Added
@@ -216,6 +220,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Missing `notification_id` on migration models
 
+[0.1.6]: https://github.com/Catalyze-Software/proxy/compare/master...0.1.6
 [0.1.5]: https://github.com/Catalyze-Software/proxy/compare/master...0.1.5
 [0.1.4]: https://github.com/Catalyze-Software/proxy/compare/master...0.1.4
 [0.1.3]: https://github.com/Catalyze-Software/proxy/compare/master...0.1.3

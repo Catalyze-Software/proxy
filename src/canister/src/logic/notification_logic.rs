@@ -622,6 +622,7 @@ impl NotificationCalls {
     ) -> Result<Vec<(u64, UserNotificationData)>, ApiError> {
         let (_, mut user_notifications) = UsernotificationStore::get(principal)?;
         user_notifications.mark_as_read_many(ids, is_read);
+        let _ = UsernotificationStore::update(principal, user_notifications.clone());
         Ok(user_notifications.to_vec())
     }
 
