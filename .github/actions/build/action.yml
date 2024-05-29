@@ -44,7 +44,7 @@ runs:
         CARGO_TERM_COLOR: always
         RUSTFLAGS: "-D warnings"
       run: cargo fmt -- --check
-    
+
     - name: clippy
       shell: bash
       if: ${{ inputs.lint == 'true' }}
@@ -52,6 +52,18 @@ runs:
         CARGO_TERM_COLOR: always
         RUSTFLAGS: "-D warnings"
       run: cargo clippy
+
+    - name: PocketIC
+      shell: bash
+      # if: ${{ inputs.test == 'true' }}
+      run: |
+        curl -LJO https://github.com/dfinity/pocketic/releases/download/4.0.0/pocket-ic-x86_64-darwin.gz
+        gzip -d pocket-ic-x86_64-darwin.gz
+        sudo mv pocket-ic-x86_64-darwin /usr/local/bin/pocket-ic
+        chmod +x /usr/local/bin/pocket-ic
+        pocket-ic --help
+        POCKET_IC_BIN="/usr/local/bin/pocket-ic"
+        echo "POCKET_IC_BIN=$POCKET_IC_BIN" >> $GITHUB_ENV
 
     - name: Tests
       shell: bash
