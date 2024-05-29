@@ -57,9 +57,9 @@ runs:
       shell: bash
       # if: ${{ inputs.test == 'true' }}
       run: |
-        curl -LJO https://github.com/dfinity/pocketic/releases/download/4.0.0/pocket-ic-x86_64-darwin.gz
-        gzip -d pocket-ic-x86_64-darwin.gz
-        sudo mv pocket-ic-x86_64-darwin /usr/local/bin/pocket-ic
+        curl -LJO https://github.com/dfinity/pocketic/releases/download/4.0.0/pocket-ic-x86_64-linux.gz
+        gzip -d pocket-ic-x86_64-linux.gz
+        sudo mv pocket-ic-x86_64-linux /usr/local/bin/pocket-ic
         chmod +x /usr/local/bin/pocket-ic
         pocket-ic --help
         POCKET_IC_BIN="/usr/local/bin/pocket-ic"
