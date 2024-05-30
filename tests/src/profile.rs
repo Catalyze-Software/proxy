@@ -23,5 +23,5 @@ fn test_add_profile() {
     );
 
     let resp = calls::add_profile(&ctx, sender, input).assert_success();
-    assert_eq!(resp.username, "alice");
+    assert_eq!(resp.username, "Alice");
 }
