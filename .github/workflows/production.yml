@@ -34,7 +34,6 @@ jobs:
           test: 'true'
           version: ${{ env.VERSION }}
           package: ${{ env.PACKAGE }}
-          build_args: '--release'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

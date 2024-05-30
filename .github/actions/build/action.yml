@@ -20,10 +20,6 @@ inputs:
     description: Rust test package name to run tests
     required: false
     default: 'tests'
-  build_args:
-    description: Arguments to pass to cargo build
-    required: false
-    default: ''
 
 runs:
   using: composite
@@ -60,7 +56,7 @@ runs:
         CARGO_TERM_COLOR: always
         RUSTFLAGS: "-D warnings"
         CARGO_BUILD_TARGET: wasm32-unknown-unknown
-      run: cargo build -p ${{ inputs.package }} ${{ inputs.build_args }}
+      run: cargo build -p ${{ inputs.package }} --release
 
     - name: Gzip Wasm
       shell: bash
