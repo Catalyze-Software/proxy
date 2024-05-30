@@ -13,4 +13,3 @@ mkdir wasm
 
 # Copy wasm
 cp target/wasm32-unknown-unknown/release/canister.wasm.gz wasm/canister.wasm.gz
-cp target/wasm32-unknown-unknown/release/canister.wasm wasm/canister.wasm
