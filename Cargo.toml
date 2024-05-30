@@ -1,3 +1,3 @@
 [workspace]
-members = ["src/canister", "src/canister_types"]
+members = ["src/canister", "src/canister_types", "tests"]
 resolver = "2"

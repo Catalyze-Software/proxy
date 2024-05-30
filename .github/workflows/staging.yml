@@ -2,35 +2,33 @@ name: Build and Deploy to Staging
 
 on:
   push:
-    tags: 
+    tags:
       - "[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   VERSION: ${{ github.ref_name }}
   PACKAGE: 'canister'
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Build
         uses: ./.github/actions/build
         with:
           lint: 'true'
-          # TODO: Enable tests once they are implemented
-          test: 'false'
-          gzip: 'true'
+          test: 'true'
           version: ${{ env.VERSION }}
           package: ${{ env.PACKAGE }}
           build_args: '--release'
-      
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:

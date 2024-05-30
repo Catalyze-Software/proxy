@@ -6,7 +6,7 @@ on:
       - '**'
       - '!master'
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
@@ -21,6 +21,4 @@ jobs:
         uses: ./.github/actions/build
         with:
           lint: 'true'
-          # TODO: Enable tests once they are implemented
-          test: 'false'
-          gzip: 'false'
+          test: 'true'

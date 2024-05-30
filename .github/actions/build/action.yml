@@ -8,9 +8,6 @@ inputs:
   test:
     description: Run tests with cargo test
     required: true
-  gzip:
-    description: Gzip the wasm file
-    required: true
   version:
     description: Version of the output gzip wasm file
     required: false
@@ -19,6 +16,10 @@ inputs:
     description: Rust package name to build
     required: false
     default: 'canister'
+  test_package:
+    description: Rust test package name to run tests
+    required: false
+    default: 'tests'
   build_args:
     description: Arguments to pass to cargo build
     required: false
@@ -53,9 +54,24 @@ runs:
         RUSTFLAGS: "-D warnings"
       run: cargo clippy
 
+    - name: Build
+      shell: bash
+      env:
+        CARGO_TERM_COLOR: always
+        RUSTFLAGS: "-D warnings"
+        CARGO_BUILD_TARGET: wasm32-unknown-unknown
+      run: cargo build -p ${{ inputs.package }} ${{ inputs.build_args }}
+
+    - name: Gzip Wasm
+      shell: bash
+      run: |
+        mkdir wasm
+        gzip -c target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm > wasm/${{ inputs.package }}_${{ inputs.version }}.wasm.gz
+        cp target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm wasm/${{ inputs.package }}_${{ inputs.version }}.wasm
+
     - name: PocketIC
       shell: bash
-      # if: ${{ inputs.test == 'true' }}
+      if: ${{ inputs.test == 'true' }}
       run: |
         curl -LJO https://github.com/dfinity/pocketic/releases/download/4.0.0/pocket-ic-x86_64-linux.gz
         gzip -d pocket-ic-x86_64-linux.gz
@@ -71,20 +87,6 @@ runs:
       env:
         CARGO_TERM_COLOR: always
         RUSTFLAGS: "-D warnings"
-      run: cargo test
+        WASM_PATH: ../wasm/${{ inputs.package }}_${{ inputs.version }}.wasm.gz
+      run: cargo test -p ${{ inputs.test_package }} -- --nocapture
 
-    - name: Build
-      shell: bash
-      env:
-        CARGO_TERM_COLOR: always
-        RUSTFLAGS: "-D warnings"
-        CARGO_BUILD_TARGET: wasm32-unknown-unknown
-      run: cargo build -p ${{ inputs.package }} ${{ inputs.build_args }}
-
-    - name: Gzip Wasm
-      shell: bash
-      if: ${{ inputs.gzip == 'true' }}
-      run: |
-        mkdir wasm
-        gzip -c target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm > wasm/${{ inputs.package }}_${{ inputs.version }}.wasm.gz
-        cp target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm wasm/${{ inputs.package }}_${{ inputs.version }}.wasm
