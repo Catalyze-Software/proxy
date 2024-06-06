@@ -1,11 +1,12 @@
 use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::caller;
+
 use canister_types::models::{
-    api_error::ApiError,
     friend_request::{FriendRequest, FriendRequestResponse},
     profile::ProfileResponse,
     relation_type::RelationType,
 };
-use ic_cdk::caller;
 
 use crate::storage::{
     FriendRequestStore, ProfileStore, StorageInsertable, StorageQueryable, StorageUpdateable,

@@ -1,7 +1,7 @@
 use std::{cell::RefCell, thread::LocalKey};
 
-use canister_types::models::api_error::ApiError;
-use ic_stable_structures::{memory_manager::MemoryId, Cell, Storable};
+use catalyze_shared::api_error::ApiError;
+use ic_stable_structures::{Cell, memory_manager::MemoryId, Storable};
 
 use super::storage_api::Memory;
 

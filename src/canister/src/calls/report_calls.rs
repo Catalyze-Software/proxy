@@ -1,3 +1,4 @@
+use catalyze_shared::api_error::ApiError;
 /// # Report methods
 /// # TODO:
 /// * Check if the guard are correctly placed
@@ -7,18 +8,18 @@
 ///
 use ic_cdk::{query, update};
 
+use canister_types::models::{
+    paged_response::PagedResponse,
+    permission::PermissionType,
+    report::{PostReport, ReportFilter, ReportResponse, ReportSort},
+};
+
 use crate::{
     helpers::{
         group_permission::{can_read, can_write},
         guards::has_access,
     },
     logic::report_logic::ReportCalls,
-};
-use canister_types::models::{
-    api_error::ApiError,
-    paged_response::PagedResponse,
-    permission::PermissionType,
-    report::{PostReport, ReportFilter, ReportResponse, ReportSort},
 };
 
 /// Add a report

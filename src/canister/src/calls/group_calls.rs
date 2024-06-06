@@ -1,11 +1,3 @@
-use crate::{
-    helpers::{
-        group_permission::{can_delete, can_edit, can_read},
-        guards::has_access,
-    },
-    logic::group_logic::GroupCalls,
-};
-
 /// # Group methods
 /// # TODO:
 /// * Check if the guard are correctly placed
@@ -16,9 +8,11 @@ use crate::{
 /// And what about the public / private access of these calls?\
 ///
 use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::{query, update};
+
 use canister_types::models::{
-    api_error::ApiError,
-    group::{GroupFilter, GroupResponse, GroupSort, GroupsCount, PostGroup, UpdateGroup},
+    group::{GroupFilter, GroupResponse, GroupsCount, GroupSort, PostGroup, UpdateGroup},
     member::{InviteMemberResponse, JoinedMemberResponse, Member},
     paged_response::PagedResponse,
     permission::{PermissionType, PostPermission},
@@ -26,7 +20,14 @@ use canister_types::models::{
     relation_type::RelationType,
     role::Role,
 };
-use ic_cdk::{query, update};
+
+use crate::{
+    helpers::{
+        group_permission::{can_delete, can_edit, can_read},
+        guards::has_access,
+    },
+    logic::group_logic::GroupCalls,
+};
 
 /// Add a group to the canister  - [`[update]`](update)
 /// # Arguments

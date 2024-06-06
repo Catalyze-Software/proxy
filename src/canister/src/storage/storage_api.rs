@@ -1,15 +1,18 @@
-use candid::Principal;
-use canister_types::models::{
-    api_error::ApiError, attendee::Attendee, boosted::Boost, event::Event,
-    event_collection::EventCollection, friend_request::FriendRequest, group::Group, log::Logger,
-    member::Member, member_collection::MemberCollection, notification::Notification,
-    profile::Profile, report::Report, user_notifications::UserNotifications,
-};
-use ic_stable_structures::{
-    memory_manager::{MemoryId, MemoryManager, VirtualMemory},
-    Cell, DefaultMemoryImpl, StableBTreeMap, Storable,
-};
 use std::{cell::RefCell, thread::LocalKey};
+
+use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_stable_structures::{
+    Cell,
+    DefaultMemoryImpl, memory_manager::{MemoryId, MemoryManager, VirtualMemory}, StableBTreeMap, Storable,
+};
+
+use canister_types::models::{
+    attendee::Attendee, boosted::Boost, event::Event, event_collection::EventCollection,
+    friend_request::FriendRequest, group::Group, log::Logger, member::Member,
+    member_collection::MemberCollection, notification::Notification, profile::Profile,
+    report::Report, user_notifications::UserNotifications,
+};
 
 pub type Memory = VirtualMemory<DefaultMemoryImpl>;
 

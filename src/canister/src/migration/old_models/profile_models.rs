@@ -2,13 +2,14 @@ use core::fmt;
 use std::{borrow::Cow, collections::HashMap};
 
 use candid::{CandidType, Decode, Deserialize, Encode, Principal};
-use canister_types::models::{
-    application_role::ApplicationRole, asset::Asset, date_range::DateRange,
-    document_details::DocumentDetails, profile_privacy::ProfilePrivacy,
-    sort_direction::SortDirection, wallet::Wallet,
-};
-use ic_stable_structures::{storable::Bound, Storable};
+use catalyze_shared::date_range::DateRange;
+use ic_stable_structures::{Storable, storable::Bound};
 use serde::Serialize;
+
+use canister_types::models::{
+    application_role::ApplicationRole, asset::Asset, document_details::DocumentDetails,
+    profile_privacy::ProfilePrivacy, sort_direction::SortDirection, wallet::Wallet,
+};
 
 #[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
 pub struct Profile {

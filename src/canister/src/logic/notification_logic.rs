@@ -1,6 +1,8 @@
 use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::caller;
+
 use canister_types::models::{
-    api_error::ApiError,
     attendee::{AttendeeInvite, InviteAttendeeResponse, JoinedAttendeeResponse},
     friend_request::{FriendRequest, FriendRequestResponse},
     member::{InviteMemberResponse, JoinedMemberResponse, MemberInvite},
@@ -12,7 +14,6 @@ use canister_types::models::{
     user_notifications::{UserNotificationData, UserNotifications},
     websocket_message::WSMessage,
 };
-use ic_cdk::caller;
 
 use crate::storage::{
     NotificationStore, StorageInsertable, StorageInsertableByKey, StorageQueryable,

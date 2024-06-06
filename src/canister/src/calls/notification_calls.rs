@@ -1,10 +1,11 @@
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::{caller, query, update};
+
 use canister_types::models::{
-    api_error::ApiError,
     notification::NotificationResponse,
     transaction_data::{TransactionCompleteData, TransactionData},
     user_notifications::UserNotificationData,
 };
-use ic_cdk::{caller, query, update};
 
 use crate::logic::notification_logic::NotificationCalls;
 

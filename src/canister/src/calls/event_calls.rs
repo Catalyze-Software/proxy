@@ -1,10 +1,3 @@
-use crate::{
-    helpers::{
-        group_permission::{can_delete, can_edit},
-        guards::has_access,
-    },
-    logic::event_logic::EventCalls,
-};
 /// # Event methods
 /// # TODO:
 /// * Check if the guard are correctly placed
@@ -15,15 +8,24 @@ use crate::{
 /// And what about the public / private access of these calls?
 ///
 use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::{query, update};
+
 use canister_types::models::{
-    api_error::ApiError,
     attendee::{Attendee, InviteAttendeeResponse, JoinedAttendeeResponse},
-    event::{EventFilter, EventResponse, EventSort, EventsCount, PostEvent, UpdateEvent},
+    event::{EventFilter, EventResponse, EventsCount, EventSort, PostEvent, UpdateEvent},
     paged_response::PagedResponse,
     permission::PermissionType,
     profile::ProfileResponse,
 };
-use ic_cdk::{query, update};
+
+use crate::{
+    helpers::{
+        group_permission::{can_delete, can_edit},
+        guards::has_access,
+    },
+    logic::event_logic::EventCalls,
+};
 
 /// Add an event - [`[update]`](update)
 /// # Arguments

@@ -1,6 +1,19 @@
-use super::{
-    attendee_logic::AttendeeCalls, member_logic::MemberCalls, notification_logic::NotificationCalls,
+use candid::Principal;
+use catalyze_shared::{
+    api_error::ApiError,
+    validation::{ValidateField, ValidationType},
 };
+use ic_cdk::{api::time, caller};
+
+use canister_types::models::{
+    document_details::DocumentDetails,
+    profile::{PostProfile, Profile, ProfileResponse, UpdateProfile},
+    relation_type::RelationType,
+    subject::{Subject, SubjectResponse, SubjectType},
+    user_notifications::UserNotifications,
+    wallet::{PostWallet, Wallet},
+};
+
 use crate::{
     helpers::validator::Validator,
     storage::{
@@ -8,18 +21,10 @@ use crate::{
         StorageQueryable, StorageUpdateable, UserNotificationStore,
     },
 };
-use candid::Principal;
-use canister_types::models::{
-    api_error::ApiError,
-    document_details::DocumentDetails,
-    profile::{PostProfile, Profile, ProfileResponse, UpdateProfile},
-    relation_type::RelationType,
-    subject::{Subject, SubjectResponse, SubjectType},
-    user_notifications::UserNotifications,
-    validation::{ValidateField, ValidationType},
-    wallet::{PostWallet, Wallet},
+
+use super::{
+    attendee_logic::AttendeeCalls, member_logic::MemberCalls, notification_logic::NotificationCalls,
 };
-use ic_cdk::{api::time, caller};
 
 pub struct ProfileCalls;
 pub struct ProfileValidation;

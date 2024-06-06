@@ -1,6 +1,39 @@
-use super::{
-    boost_logic::BoostCalls, notification_logic::NotificationCalls, profile_logic::ProfileCalls,
+use std::collections::HashMap;
+
+use candid::Principal;
+use catalyze_shared::{
+    api_error::ApiError,
+    date_range::DateRange,
+    validation::{ValidateField, ValidationType},
 };
+use ic_cdk::{
+    api::{call, time},
+    caller,
+};
+
+use canister_types::{
+    misc::role_misc::{default_roles, read_only_permissions},
+    models::{
+        boosted::Boost,
+        event_collection::EventCollection,
+        group::{
+            Group, GroupCallerData, GroupFilter, GroupResponse, GroupsCount, GroupSort, PostGroup,
+            UpdateGroup,
+        },
+        invite_type::InviteType,
+        member::{InviteMemberResponse, JoinedMemberResponse, Member},
+        member_collection::MemberCollection,
+        neuron::{DissolveState, ListNeurons, ListNeuronsResponse},
+        paged_response::PagedResponse,
+        permission::{Permission, PermissionActionType, PermissionType, PostPermission},
+        privacy::{GatedType, NeuronGatedRules, Privacy, TokenGated},
+        profile::ProfileResponse,
+        relation_type::RelationType,
+        role::Role,
+        subject::{Subject, SubjectType},
+    },
+};
+
 use crate::{
     helpers::{
         group_permission::has_permission,
@@ -16,39 +49,13 @@ use crate::{
         StorageInsertable, StorageInsertableByKey, StorageQueryable, StorageUpdateable,
     },
 };
-use candid::Principal;
-use canister_types::{
-    misc::role_misc::{default_roles, read_only_permissions},
-    models::{
-        api_error::ApiError,
-        boosted::Boost,
-        date_range::DateRange,
-        event_collection::EventCollection,
-        group::{
-            Group, GroupCallerData, GroupFilter, GroupResponse, GroupSort, GroupsCount, PostGroup,
-            UpdateGroup,
-        },
-        invite_type::InviteType,
-        member::{InviteMemberResponse, JoinedMemberResponse, Member},
-        member_collection::MemberCollection,
-        neuron::{DissolveState, ListNeurons, ListNeuronsResponse},
-        paged_response::PagedResponse,
-        permission::{Permission, PermissionActionType, PermissionType, PostPermission},
-        privacy::{GatedType, NeuronGatedRules, Privacy, TokenGated},
-        profile::ProfileResponse,
-        relation_type::RelationType,
-        role::Role,
-        subject::{Subject, SubjectType},
-        validation::{ValidateField, ValidationType},
-    },
+
+use super::{
+    boost_logic::BoostCalls, notification_logic::NotificationCalls, profile_logic::ProfileCalls,
 };
-use ic_cdk::{
-    api::{call, time},
-    caller,
-};
-use std::collections::HashMap;
 
 pub struct GroupCalls;
+
 pub struct GroupValidation;
 
 impl GroupCalls {

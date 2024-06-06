@@ -1,11 +1,12 @@
-use canister_types::models::{
+use std::str::FromStr;
+
+use catalyze_shared::{
     api_error::ApiError,
     date_range::DateRange,
     validation::{ValidateField, ValidationResponse, ValidationType},
 };
 use email_address::EmailAddress;
 use ic_cdk::api::time;
-use std::str::FromStr;
 
 use super::str::str_len;
 

@@ -1,8 +1,7 @@
 use candid::Principal;
-use canister_types::models::{
-    api_error::ApiError,
-    attendee::{Attendee, JoinedAttendeeResponse},
-};
+use catalyze_shared::api_error::ApiError;
+
+use canister_types::models::attendee::{Attendee, JoinedAttendeeResponse};
 
 use crate::storage::{AttendeeStore, StorageInsertableByKey, StorageQueryable};
 

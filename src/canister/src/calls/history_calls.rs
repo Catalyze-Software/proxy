@@ -1,4 +1,4 @@
-use canister_types::models::api_error::ApiError;
+use catalyze_shared::api_error::ApiError;
 use ic_cdk::query;
 
 use crate::storage::{CellStorage, HistoryPointStorage};

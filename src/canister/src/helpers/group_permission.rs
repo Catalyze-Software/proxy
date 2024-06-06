@@ -1,10 +1,11 @@
 use candid::Principal;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::caller;
+
 use canister_types::models::{
-    api_error::ApiError,
     permission::{PermissionActionType, PermissionType},
     role::Role,
 };
-use ic_cdk::caller;
 
 use crate::storage::{GroupStore, MemberStore, StorageQueryable};
 

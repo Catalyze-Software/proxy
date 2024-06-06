@@ -1,12 +1,14 @@
 use std::{borrow::Cow, collections::HashMap};
 
 use candid::{CandidType, Decode, Deserialize, Encode, Principal};
-use canister_types::models::{
-    asset::Asset, date_range::DateRange, location::Location, permission::Permission,
-    privacy::Privacy, sort_direction::SortDirection,
-};
-use ic_stable_structures::{storable::Bound, Storable};
+use catalyze_shared::date_range::DateRange;
+use ic_stable_structures::{Storable, storable::Bound};
 use serde::Serialize;
+
+use canister_types::models::{
+    asset::Asset, location::Location, permission::Permission, privacy::Privacy,
+    sort_direction::SortDirection,
+};
 
 #[derive(Clone, CandidType, Serialize, Deserialize, Debug)]
 pub struct Group {

@@ -1,6 +1,9 @@
-use crate::storage::{LoggerStore, StorageInsertable, LOGIN_EVENT};
-use canister_types::models::{api_error::ApiError, log::Logger};
+use catalyze_shared::api_error::ApiError;
 use ic_cdk::{api::time, caller};
+
+use canister_types::models::log::Logger;
+
+use crate::storage::{LoggerStore, LOGIN_EVENT, StorageInsertable};
 
 pub struct LoginEvent;
 

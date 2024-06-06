@@ -1,3 +1,25 @@
+use std::collections::HashMap;
+
+use candid::Principal;
+use catalyze_shared::{api_error::ApiError, date_range::DateRange};
+use ic_cdk::{api::time, caller};
+
+use canister_types::models::{
+    attendee::{Attendee, InviteAttendeeResponse, JoinedAttendeeResponse},
+    boosted::Boost,
+    event::{
+        Event, EventCallerData, EventFilter, EventResponse, EventsCount, EventSort, PostEvent,
+        UpdateEvent,
+    },
+    event_collection::EventCollection,
+    invite_type::InviteType,
+    member_collection::MemberCollection,
+    paged_response::PagedResponse,
+    privacy::Privacy,
+    profile::ProfileResponse,
+    subject::{Subject, SubjectType},
+};
+
 use crate::{
     helpers::time_helper::hours_to_nanoseconds,
     storage::{
@@ -9,26 +31,6 @@ use crate::{
 use super::{
     boost_logic::BoostCalls, notification_logic::NotificationCalls, profile_logic::ProfileCalls,
 };
-use candid::Principal;
-use canister_types::models::{
-    api_error::ApiError,
-    attendee::{Attendee, InviteAttendeeResponse, JoinedAttendeeResponse},
-    boosted::Boost,
-    date_range::DateRange,
-    event::{
-        Event, EventCallerData, EventFilter, EventResponse, EventSort, EventsCount, PostEvent,
-        UpdateEvent,
-    },
-    event_collection::EventCollection,
-    invite_type::InviteType,
-    member_collection::MemberCollection,
-    paged_response::PagedResponse,
-    privacy::Privacy,
-    profile::ProfileResponse,
-    subject::{Subject, SubjectType},
-};
-use ic_cdk::{api::time, caller};
-use std::collections::HashMap;
 
 pub struct EventCalls;
 

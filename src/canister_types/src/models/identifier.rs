@@ -1,9 +1,8 @@
 use std::fmt;
 
 use candid::{CandidType, Deserialize, Principal};
+use catalyze_shared::api_error::ApiError;
 use serde::Serialize;
-
-use super::api_error::ApiError;
 
 // If not to allow this, it will block clippy to scan the whole project
 #[allow(clippy::derived_hash_with_manual_eq)]

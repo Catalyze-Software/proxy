@@ -1,9 +1,8 @@
 use std::fmt::{Display, Formatter};
 
 use candid::{CandidType, Deserialize};
+use catalyze_shared::api_error::ApiError;
 use serde::Serialize;
-
-use super::api_error::ApiError;
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, CandidType, Deserialize, Serialize)]
 pub enum TopicKind {

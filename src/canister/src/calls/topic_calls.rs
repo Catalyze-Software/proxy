@@ -1,9 +1,9 @@
-use crate::{helpers::guards::has_access, logic::topic_logic::TopicCalls};
-use canister_types::models::{
-    api_error::ApiError,
-    topic::{Topic, TopicKind},
-};
+use catalyze_shared::api_error::ApiError;
 use ic_cdk::{query, update};
+
+use canister_types::models::topic::{Topic, TopicKind};
+
+use crate::{helpers::guards::has_access, logic::topic_logic::TopicCalls};
 
 /// Add a topic to the canister  - [`[update]`](update)
 /// # Arguments

@@ -1,7 +1,6 @@
 // should all be removed after implementation
 #![allow(deprecated)]
 
-use candid::Principal;
 use ic_cdk::query;
 
 pub static CATALYZE_MULTI_SIG: &str = "fcygz-gqaaa-aaaap-abpaa-cai";
@@ -18,7 +17,7 @@ pub mod storage;
 pub fn __export_did_tmp_() -> String {
     use candid::export_service;
 
-    use canister_types::models::api_error::*;
+    use candid::Principal;
     use canister_types::models::attendee::*;
     use canister_types::models::event::*;
     use canister_types::models::friend_request::*;
@@ -39,6 +38,7 @@ pub fn __export_did_tmp_() -> String {
     use canister_types::models::user_notifications::*;
     use canister_types::models::wallet::*;
     use canister_types::models::websocket_message::WSMessage;
+    use catalyze_shared::api_error::*;
     use ic_cdk::api::management_canister::http_request::HttpResponse;
     use ic_websocket_cdk::types::*;
 

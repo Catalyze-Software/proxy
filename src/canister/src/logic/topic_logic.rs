@@ -1,8 +1,9 @@
-use canister_types::models::{
+use catalyze_shared::{
     api_error::ApiError,
-    topic::{Topic, TopicKind},
     validation::{ValidateField, ValidationType},
 };
+
+use canister_types::models::topic::{Topic, TopicKind};
 
 use crate::{
     helpers::validator::Validator,

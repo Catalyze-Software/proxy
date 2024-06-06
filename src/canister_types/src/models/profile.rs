@@ -1,19 +1,16 @@
 use std::collections::HashMap;
 
 use candid::{CandidType, Deserialize, Principal};
+use catalyze_shared::{api_error::ApiError, date_range::DateRange};
 use ic_cdk::api::time;
 use serde::Serialize;
 
 use crate::{
     impl_storable_for,
-    models::{
-        application_role::ApplicationRole, asset::Asset, date_range::DateRange,
-        sort_direction::SortDirection,
-    },
+    models::{application_role::ApplicationRole, asset::Asset, sort_direction::SortDirection},
 };
 
 use super::{
-    api_error::ApiError,
     document_details::DocumentDetails,
     profile_privacy::ProfilePrivacy,
     subject::Subject,

@@ -1,7 +1,8 @@
-use candid::{decode_one, encode_one, CandidType, Principal};
+use candid::{CandidType, decode_one, encode_one, Principal};
+use catalyze_shared::api_error::ApiError;
 use serde::{Deserialize, Serialize};
 
-use super::{api_error::ApiError, notification::NotificationResponse};
+use super::notification::NotificationResponse;
 
 #[derive(CandidType, Clone, Debug, Deserialize, Serialize)]
 pub enum WSMessage {

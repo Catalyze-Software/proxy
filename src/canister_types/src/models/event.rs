@@ -1,19 +1,16 @@
 use std::collections::HashMap;
 
 use candid::{CandidType, Deserialize, Principal};
+use catalyze_shared::{api_error::ApiError, date_range::DateRange};
 use ic_cdk::{api::time, caller};
 use serde::Serialize;
 
 use crate::{
     impl_storable_for,
-    models::{
-        asset::Asset, date_range::DateRange, location::Location, privacy::Privacy,
-        sort_direction::SortDirection,
-    },
+    models::{asset::Asset, location::Location, privacy::Privacy, sort_direction::SortDirection},
 };
 
 use super::{
-    api_error::ApiError,
     attendee::{InviteAttendeeResponse, JoinedAttendeeResponse},
     boosted::Boost,
 };

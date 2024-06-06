@@ -1,8 +1,7 @@
 use candid::Principal;
-use canister_types::models::{
-    api_error::ApiError,
-    member::{JoinedMemberResponse, Member},
-};
+use catalyze_shared::api_error::ApiError;
+
+use canister_types::models::member::{JoinedMemberResponse, Member};
 
 use crate::storage::{MemberStore, StorageInsertableByKey, StorageQueryable};
 

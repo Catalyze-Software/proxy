@@ -1,6 +1,8 @@
 use candid::Principal;
-use canister_types::models::{api_error::ApiError, application_role::ApplicationRole};
+use catalyze_shared::api_error::ApiError;
 use ic_cdk::caller;
+
+use canister_types::models::application_role::ApplicationRole;
 
 use crate::storage::{ProfileStore, StorageQueryable};
 

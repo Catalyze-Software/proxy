@@ -3,11 +3,9 @@ use crate::{
     logic::{boost_logic::BoostCalls, event_logic::EventCalls, group_logic::GroupCalls},
     E8S_PER_DAY_BOOST_COST,
 };
-use canister_types::models::{
-    event::EventResponse, group::GroupResponse, subject::Subject,
-};
+use canister_types::models::{event::EventResponse, group::GroupResponse, subject::Subject};
+use catalyze_shared::api_error::ApiError;
 use ic_cdk::{query, update};
-use catalyze_shared::api_error::{ApiError};
 
 /// Returns the boosted groups
 /// # Returns

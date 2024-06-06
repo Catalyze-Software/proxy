@@ -1,14 +1,14 @@
-use crate::storage::LoggerStore;
+use catalyze_shared::api_error::ApiError;
+use ic_cdk::{query, update};
+
+use canister_types::models::log::{Logger, PostLog};
+use canister_types::models::log::LogType;
+
 use crate::{
     helpers::guards::{has_access, is_developer, is_monitor},
     logic::logger_logic::LoginEvent,
 };
-use canister_types::models::log::LogType;
-use canister_types::models::{
-    api_error::ApiError,
-    log::{Logger, PostLog},
-};
-use ic_cdk::{query, update};
+use crate::storage::LoggerStore;
 
 // Update functions
 #[update(guard = "has_access")]

@@ -1,12 +1,12 @@
-use super::storage_api::{
-    StaticStorageRef, Storage, StorageInsertable, StorageQueryable, StorageUpdateable, LOGS,
-    LOGS_MEMORY_ID,
-};
-use canister_types::models::{
-    api_error::ApiError,
-    log::{Logger, PostLog},
-};
+use catalyze_shared::api_error::ApiError;
 use ic_stable_structures::memory_manager::MemoryId;
+
+use canister_types::models::log::{Logger, PostLog};
+
+use super::storage_api::{
+    LOGS, LOGS_MEMORY_ID, StaticStorageRef, Storage, StorageInsertable, StorageQueryable,
+    StorageUpdateable,
+};
 
 pub struct LoggerStore;
 
