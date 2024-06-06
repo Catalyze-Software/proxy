@@ -27,3 +27,4 @@ email_address = "0.2"
 unicode-segmentation = "1"
 
 canister_types = { path = "../canister_types" }
+catalyze-shared = { version = "0.1.0", path = "../../../catalyze-shared" }

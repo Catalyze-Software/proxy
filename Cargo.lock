@@ -72,9 +72,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "candid"
-version = "0.10.4"
+version = "0.10.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7fcd70c7bed52cb20e38dd933c19c0c9abf0302b60db3fa3186e27ec53edf6ad"
+checksum = "dd5902d37352dffd8bd9177a2daa6444ce3cd0279c91763fb0171c053aa04335"
 dependencies = [
  "anyhow",
  "binread",
@@ -111,6 +111,7 @@ version = "0.1.9"
 dependencies = [
  "candid",
  "canister_types",
+ "catalyze-shared",
  "email_address",
  "ic-cdk 0.14.0",
  "ic-cdk-timers",
@@ -127,6 +128,7 @@ name = "canister_types"
 version = "0.1.0"
 dependencies = [
  "candid",
+ "catalyze-shared",
  "email_address",
  "ic-cdk 0.14.0",
  "ic-ledger-types",
@@ -134,6 +136,15 @@ dependencies = [
  "icrc-ledger-types",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "catalyze-shared"
+version = "0.1.0"
+dependencies = [
+ "candid",
+ "ic-cdk 0.14.0",
+ "serde",
 ]
 
 [[package]]
@@ -611,9 +622,9 @@ checksum = "e86697c916019a8588c99b5fac3cead74ec0b4b819707a682fd4d23fa0ce1ba1"
 
 [[package]]
 name = "serde"
-version = "1.0.197"
+version = "1.0.203"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fb1c873e1b9b056a4dc4c0c198b24c3ffa059243875552b2bd0933b1aee4ce2"
+checksum = "7253ab4de971e72fb7be983802300c30b5a7f0c2e56fab8abfc6a214307c0094"
 dependencies = [
  "serde_derive",
 ]
@@ -639,9 +650,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.197"
+version = "1.0.203"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7eb0b34b42edc17f6b7cac84a52a1c5f0e1bb2227e997ca9011ea3dd34e8610b"
+checksum = "500cbc0ebeb6f46627f50f3f5811ccf6bf00643be300b4c3eabc0ef55dc5b5ba"
 dependencies = [
  "proc-macro2",
  "quote",

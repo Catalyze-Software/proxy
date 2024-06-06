@@ -5,7 +5,6 @@ use crate::{
 };
 use candid::Principal;
 use canister_types::models::{
-    api_error::ApiError,
     boosted::Boost,
     subject::{Subject, SubjectType},
 };
@@ -13,6 +12,7 @@ use ic_cdk::{api::time, caller};
 use ic_cdk_timers::{clear_timer, set_timer, TimerId};
 use ic_ledger_types::Tokens;
 use std::{cell::RefCell, collections::HashMap, time::Duration};
+use catalyze_shared::api_error::{ApiError};
 
 thread_local! {
     pub static LAST_BLOCK_HEIGHT: RefCell<u64> = RefCell::new(u64::default());

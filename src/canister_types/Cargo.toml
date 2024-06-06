@@ -19,3 +19,4 @@ ic-stable-structures = "0.6"
 icrc-ledger-types = "0.1"
 
 email_address = "0.2"
+catalyze-shared = { version = "0.1.0", path = "../../../catalyze-shared" }
