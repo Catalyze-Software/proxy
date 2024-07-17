@@ -136,9 +136,14 @@ impl ProfileCalls {
     }
 
     pub fn query_profiles(query: String) -> Vec<ProfileResponse> {
+        if query.len() < 3 {
+            return vec![];
+        }
+
         let _query = query.to_string().to_lowercase();
+
         let profiles_result =
-            ProfileStore::filter(|_, p| p.username.to_lowercase().contains(&_query));
+            ProfileStore::filter(|_, p| p.username.to_lowercase().starts_with(&_query));
         profiles_result
             .into_iter()
             .map(|profile| ProfileResponse::new(profile.0, profile.1))
