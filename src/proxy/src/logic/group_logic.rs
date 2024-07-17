@@ -1019,6 +1019,31 @@ impl GroupCalls {
         .map(|m| m.principal)
         .collect()
     }
+
+    pub fn transfer_group_ownership(
+        group_id: u64,
+        from: Principal,
+        to: Principal,
+    ) -> Result<(), ApiError> {
+        let (_, mut group) = GroupStore::get(group_id)?;
+        let (_, mut old_owner) = MemberStore::get(from)?;
+        let (_, mut new_owner) = MemberStore::get(to)?;
+
+        if group.owner != from {
+            return Err(ApiError::unauthorized().add_message("You are not the owner of the group"));
+        }
+
+        group.owner = to;
+        GroupStore::update(group_id, group)?;
+
+        old_owner.replace_roles(&group_id, vec!["member".to_string()]);
+        new_owner.replace_roles(&group_id, vec!["owner".to_string()]);
+
+        MemberStore::update(from, old_owner)?;
+        MemberStore::update(to, new_owner)?;
+
+        Ok(())
+    }
 }
 
 impl GroupValidation {

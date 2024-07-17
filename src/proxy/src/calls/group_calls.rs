@@ -26,7 +26,7 @@ use canister_types::models::{
     relation_type::RelationType,
     role::Role,
 };
-use ic_cdk::{query, update};
+use ic_cdk::{caller, query, update};
 
 /// Add a group to the canister  - [`[update]`](update)
 /// # Arguments
@@ -644,4 +644,9 @@ pub fn remove_ban_from_group_member(
 ) -> Result<(), ApiError> {
     can_edit(group_id, PermissionType::Member(None))?;
     GroupCalls::remove_special_member_from_group(group_id, member_principal)
+}
+
+#[update(guard = "has_access")]
+pub fn transfer_group_ownership(group_id: u64, to: Principal) -> Result<(), ApiError> {
+    GroupCalls::transfer_group_ownership(group_id, caller(), to)
 }
