@@ -135,6 +135,16 @@ impl ProfileCalls {
             .collect()
     }
 
+    pub fn query_profiles(query: String) -> Vec<ProfileResponse> {
+        let _query = query.to_string().to_lowercase();
+        let profiles_result =
+            ProfileStore::filter(|_, p| p.username.to_lowercase().contains(&_query));
+        profiles_result
+            .into_iter()
+            .map(|profile| ProfileResponse::new(profile.0, profile.1))
+            .collect()
+    }
+
     pub fn add_starred(subject: Subject) -> Result<ProfileResponse, ApiError> {
         let (_, mut existing_profile) = ProfileStore::get(caller())?;
 

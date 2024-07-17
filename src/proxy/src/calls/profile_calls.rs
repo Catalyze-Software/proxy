@@ -61,6 +61,18 @@ pub fn get_profiles(principals: Vec<Principal>) -> Vec<ProfileResponse> {
     ProfileCalls::get_profiles(principals)
 }
 
+/// Gets profiles that match the given query - [`[query]`](query)
+/// # Arguments
+/// * `query` - The query to search for
+/// # Returns
+/// * `Vec<ProfileResponse>` - The profiles that were found
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query(guard = "has_access")]
+pub fn query_profiles(query: String) -> Vec<ProfileResponse> {
+    ProfileCalls::query_profiles(query)
+}
+
 /// Edit the caller his a profile - [`[update]`](update)
 /// # Arguments
 /// * `update_profile` - The profile to update

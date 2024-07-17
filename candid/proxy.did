@@ -907,6 +907,7 @@ service : () -> {
       principal,
       nat64,
     ) -> (bool);
+  query_profiles : (text) -> (vec ProfileResponse) query;
   read_reward_buffer : () -> (vec RewardableActivityResponse) query;
   remove_all_notifications : () -> (vec record { nat64; UserNotificationData });
   remove_attendee_from_event : (nat64, nat64, principal) -> (Result_2);
