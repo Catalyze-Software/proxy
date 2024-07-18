@@ -934,6 +934,7 @@ service : () -> {
   set_ws_url : (text) -> ();
   store_stats : () -> (vec text) query;
   test_log : () -> ();
+  transfer_group_ownership : (nat64, principal) -> (Result_2);
   unblock_user : (principal) -> (Result_10);
   ws_close : (CanisterWsCloseArguments) -> (Result_36);
   ws_get_messages : (CanisterWsGetMessagesArguments) -> (Result_37) query;

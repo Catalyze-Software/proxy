@@ -21,7 +21,7 @@ use crate::{
 };
 use candid::Principal;
 use canister_types::{
-    misc::role_misc::{default_roles, read_only_permissions},
+    misc::role_misc::{default_roles, read_only_permissions, MEMBER_ROLE, OWNER_ROLE},
     models::{
         api_error::ApiError,
         boosted::Boost,
@@ -86,7 +86,7 @@ impl GroupCalls {
         let (new_group_id, new_group) = GroupStore::insert(Group::from(post_group))?;
 
         // generate and store an group identifier
-        member.add_joined(new_group_id, vec!["owner".to_string()]);
+        member.add_joined(new_group_id, vec![OWNER_ROLE.to_string()]);
 
         // notify the reward buffer store that the group member count has changed
         RewardBufferStore::notify_group_member_count_changed(new_group_id);
@@ -383,13 +383,12 @@ impl GroupCalls {
                 .into_iter()
                 .try_for_each(|(principal, mut member)| {
                     if member.get_roles(group_id).is_empty() {
-                        let role = "member";
-                        member.add_group_role(&group_id, role);
+                        member.add_group_role(&group_id, MEMBER_ROLE);
 
                         HistoryEventLogic::send(
                             group_id,
                             principal,
-                            vec![role.to_string()],
+                            vec![MEMBER_ROLE.to_string()],
                             GroupRoleChangeKind::Add,
                         )?;
                     }
@@ -1036,8 +1035,8 @@ impl GroupCalls {
         group.owner = to;
         GroupStore::update(group_id, group)?;
 
-        old_owner.replace_roles(&group_id, vec!["member".to_string()]);
-        new_owner.replace_roles(&group_id, vec!["owner".to_string()]);
+        old_owner.replace_roles(&group_id, vec![MEMBER_ROLE.to_string()]);
+        new_owner.replace_roles(&group_id, vec![OWNER_ROLE.to_string()]);
 
         MemberStore::update(from, old_owner)?;
         MemberStore::update(to, new_owner)?;
@@ -1321,7 +1320,7 @@ impl GroupValidation {
         let validated_member = match group.privacy {
             // If the group is public, add the member to the group
             Public => {
-                member.add_joined(group_id, vec!["member".to_string()]);
+                member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                 let group_member_principals = GroupCalls::get_group_members(group_id)?
                     .iter()
                     .map(|member| member.principal)
@@ -1373,7 +1372,7 @@ impl GroupValidation {
                             }
                         }
                         if is_valid {
-                            member.add_joined(group_id, vec!["member".to_string()]);
+                            member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                             member_collection.add_member(caller);
 
                             // notify the reward buffer store that the group member count has changed
@@ -1401,7 +1400,7 @@ impl GroupValidation {
                             }
                         }
                         if is_valid {
-                            member.add_joined(group_id, vec!["member".to_string()]);
+                            member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                             member_collection.add_member(caller);
 
                             // notify the reward buffer store that the group member count has changed

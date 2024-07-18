@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Query method to search profiles by username `query_profiles`
+- Method to transfer group ownership
+- static consts for roles
 
 ### Changed
 
