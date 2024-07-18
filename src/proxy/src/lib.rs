@@ -25,6 +25,7 @@ pub fn __export_did_tmp_() -> String {
     use canister_types::models::event::*;
     use canister_types::models::friend_request::*;
     use canister_types::models::group::*;
+    use canister_types::models::group_transfer_request::GroupTransferRequest;
     use canister_types::models::http_types::HttpRequest;
     use canister_types::models::log::*;
     use canister_types::models::member::*;

@@ -19,6 +19,7 @@ use candid::Principal;
 use canister_types::models::{
     api_error::ApiError,
     group::{GroupFilter, GroupResponse, GroupSort, GroupsCount, PostGroup, UpdateGroup},
+    group_transfer_request::GroupTransferRequest,
     member::{InviteMemberResponse, JoinedMemberResponse, Member},
     paged_response::PagedResponse,
     permission::{PermissionType, PostPermission},
@@ -647,6 +648,25 @@ pub fn remove_ban_from_group_member(
 }
 
 #[update(guard = "has_access")]
-pub fn transfer_group_ownership(group_id: u64, to: Principal) -> Result<(), ApiError> {
-    GroupCalls::transfer_group_ownership(group_id, caller(), to)
+pub fn create_transfer_group_ownership_request(
+    group_id: u64,
+    to: Principal,
+) -> Result<(u64, GroupTransferRequest), ApiError> {
+    can_delete(group_id, PermissionType::Group(None))?;
+    GroupCalls::create_transfer_group_ownership_request(group_id, caller(), to)
+}
+
+#[update(guard = "has_access")]
+pub fn cancel_transfer_group_ownership_request(group_id: u64) -> Result<bool, ApiError> {
+    can_delete(group_id, PermissionType::Group(None))?;
+    GroupCalls::cancel_transfer_group_ownership_request(group_id, caller())
+}
+
+#[update(guard = "has_access")]
+pub fn accept_or_decline_transfer_group_ownership_request(
+    group_id: u64,
+    accept: bool,
+) -> Result<bool, ApiError> {
+    can_read(group_id, PermissionType::Group(None))?;
+    GroupCalls::accept_or_decline_transfer_group_ownership_request(group_id, accept)
 }

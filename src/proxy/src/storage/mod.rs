@@ -7,6 +7,7 @@ mod friend_request_storage;
 mod group_events_storage;
 mod group_members_storage;
 mod group_storage;
+pub mod group_transfer_request_storage;
 mod history_canister_storage;
 mod history_point_storage;
 mod id_storage;
@@ -20,7 +21,6 @@ pub mod reward_storage;
 pub mod storage_api;
 mod topic_storage;
 mod user_notification_storage;
-
 // Re-export stores
 
 pub use attendee_storage::AttendeeStore;

@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query method to search profiles by username `query_profiles`
 - Method to transfer group ownership
 - static consts for roles
+- `GroupTransferRequest` store with struct
+- public `create_transfer_group_ownership_request` to create a group transfer request as a group owner
+- public `cancel_transfer_group_ownership_request` to cancel a group transfer request a a group owner
+- public `accept_or_decline_transfer_group_ownership_request` to accept or decline a group transfer as a recipient
+- `transfer_group_ownership` to handle the actual transfer
 
 ### Changed
 
