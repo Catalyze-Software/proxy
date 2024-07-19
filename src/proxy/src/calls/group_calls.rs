@@ -647,6 +647,16 @@ pub fn remove_ban_from_group_member(
     GroupCalls::remove_special_member_from_group(group_id, member_principal)
 }
 
+#[query(guard = "has_access")]
+pub fn get_from_group_transfer_requests() -> Vec<(u64, GroupTransferRequest)> {
+    GroupCalls::get_from_group_transfer_requests(caller())
+}
+
+#[query(guard = "has_access")]
+pub fn get_to_group_transfer_requests() -> Vec<(u64, GroupTransferRequest)> {
+    GroupCalls::get_to_group_transfer_requests(caller())
+}
+
 #[update(guard = "has_access")]
 pub fn create_transfer_group_ownership_request(
     group_id: u64,

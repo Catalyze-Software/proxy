@@ -1020,6 +1020,18 @@ impl GroupCalls {
         .collect()
     }
 
+    pub fn get_from_group_transfer_requests(
+        principal: Principal,
+    ) -> Vec<(u64, GroupTransferRequest)> {
+        GroupTransferRequestStore::filter(|_, r| r.from == principal)
+    }
+
+    pub fn get_to_group_transfer_requests(
+        principal: Principal,
+    ) -> Vec<(u64, GroupTransferRequest)> {
+        GroupTransferRequestStore::filter(|_, r| r.to == principal)
+    }
+
     pub fn create_transfer_group_ownership_request(
         group_id: u64,
         from: Principal,
