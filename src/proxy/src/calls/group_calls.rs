@@ -19,6 +19,7 @@ use candid::Principal;
 use canister_types::models::{
     api_error::ApiError,
     group::{GroupFilter, GroupResponse, GroupSort, GroupsCount, PostGroup, UpdateGroup},
+    group_transfer_request::GroupTransferRequest,
     member::{InviteMemberResponse, JoinedMemberResponse, Member},
     paged_response::PagedResponse,
     permission::{PermissionType, PostPermission},
@@ -26,7 +27,7 @@ use canister_types::models::{
     relation_type::RelationType,
     role::Role,
 };
-use ic_cdk::{query, update};
+use ic_cdk::{caller, query, update};
 
 /// Add a group to the canister  - [`[update]`](update)
 /// # Arguments
@@ -644,4 +645,38 @@ pub fn remove_ban_from_group_member(
 ) -> Result<(), ApiError> {
     can_edit(group_id, PermissionType::Member(None))?;
     GroupCalls::remove_special_member_from_group(group_id, member_principal)
+}
+
+#[query(guard = "has_access")]
+pub fn get_from_group_transfer_requests() -> Vec<(u64, GroupTransferRequest)> {
+    GroupCalls::get_from_group_transfer_requests(caller())
+}
+
+#[query(guard = "has_access")]
+pub fn get_to_group_transfer_requests() -> Vec<(u64, GroupTransferRequest)> {
+    GroupCalls::get_to_group_transfer_requests(caller())
+}
+
+#[update(guard = "has_access")]
+pub fn create_transfer_group_ownership_request(
+    group_id: u64,
+    to: Principal,
+) -> Result<(u64, GroupTransferRequest), ApiError> {
+    can_delete(group_id, PermissionType::Group(None))?;
+    GroupCalls::create_transfer_group_ownership_request(group_id, caller(), to)
+}
+
+#[update(guard = "has_access")]
+pub fn cancel_transfer_group_ownership_request(group_id: u64) -> Result<bool, ApiError> {
+    can_delete(group_id, PermissionType::Group(None))?;
+    GroupCalls::cancel_transfer_group_ownership_request(group_id, caller())
+}
+
+#[update(guard = "has_access")]
+pub fn accept_or_decline_transfer_group_ownership_request(
+    group_id: u64,
+    accept: bool,
+) -> Result<bool, ApiError> {
+    can_read(group_id, PermissionType::Group(None))?;
+    GroupCalls::accept_or_decline_transfer_group_ownership_request(group_id, accept)
 }

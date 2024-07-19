@@ -13,15 +13,15 @@ use crate::{
         validator::Validator,
     },
     storage::{
-        BoostedStore, GroupEventsStore, GroupMemberStore, GroupStore, MemberStore, ProfileStore,
-        RewardBufferStore, StorageInsertable, StorageInsertableByKey, StorageQueryable,
-        StorageUpdateable,
+        group_transfer_request_storage::GroupTransferRequestStore, BoostedStore, GroupEventsStore,
+        GroupMemberStore, GroupStore, MemberStore, ProfileStore, RewardBufferStore,
+        StorageInsertable, StorageInsertableByKey, StorageQueryable, StorageUpdateable,
     },
     USER_GROUP_CREATION_LIMIT,
 };
 use candid::Principal;
 use canister_types::{
-    misc::role_misc::{default_roles, read_only_permissions},
+    misc::role_misc::{default_roles, read_only_permissions, MEMBER_ROLE, OWNER_ROLE},
     models::{
         api_error::ApiError,
         boosted::Boost,
@@ -31,6 +31,7 @@ use canister_types::{
             Group, GroupCallerData, GroupFilter, GroupResponse, GroupSort, GroupsCount, PostGroup,
             UpdateGroup,
         },
+        group_transfer_request::GroupTransferRequest,
         history_event::GroupRoleChangeKind,
         invite_type::InviteType,
         member::{InviteMemberResponse, JoinedMemberResponse, Member},
@@ -86,7 +87,7 @@ impl GroupCalls {
         let (new_group_id, new_group) = GroupStore::insert(Group::from(post_group))?;
 
         // generate and store an group identifier
-        member.add_joined(new_group_id, vec!["owner".to_string()]);
+        member.add_joined(new_group_id, vec![OWNER_ROLE.to_string()]);
 
         // notify the reward buffer store that the group member count has changed
         RewardBufferStore::notify_group_member_count_changed(new_group_id);
@@ -383,13 +384,12 @@ impl GroupCalls {
                 .into_iter()
                 .try_for_each(|(principal, mut member)| {
                     if member.get_roles(group_id).is_empty() {
-                        let role = "member";
-                        member.add_group_role(&group_id, role);
+                        member.add_group_role(&group_id, MEMBER_ROLE);
 
                         HistoryEventLogic::send(
                             group_id,
                             principal,
-                            vec![role.to_string()],
+                            vec![MEMBER_ROLE.to_string()],
                             GroupRoleChangeKind::Add,
                         )?;
                     }
@@ -1019,6 +1019,115 @@ impl GroupCalls {
         .map(|m| m.principal)
         .collect()
     }
+
+    pub fn get_from_group_transfer_requests(
+        principal: Principal,
+    ) -> Vec<(u64, GroupTransferRequest)> {
+        GroupTransferRequestStore::filter(|_, r| r.from == principal)
+    }
+
+    pub fn get_to_group_transfer_requests(
+        principal: Principal,
+    ) -> Vec<(u64, GroupTransferRequest)> {
+        GroupTransferRequestStore::filter(|_, r| r.to == principal)
+    }
+
+    pub fn create_transfer_group_ownership_request(
+        group_id: u64,
+        from: Principal,
+        to: Principal,
+    ) -> Result<(u64, GroupTransferRequest), ApiError> {
+        // if there already is a transfer request for this group, return an error
+        if GroupTransferRequestStore::get(group_id).is_ok() {
+            return Err(ApiError::bad_request().add_message("Transfer request already exists"));
+        }
+
+        // if the caller is not the owner of the group, return an error
+        let (_, group) = GroupStore::get(group_id)?;
+        if group.owner != from {
+            return Err(ApiError::unauthorized().add_message("You are not the owner of the group"));
+        }
+
+        let (_, member) = MemberStore::get(to)?;
+        if !member.is_group_joined(&group_id) {
+            return Err(ApiError::bad_request().add_message("Recipient is not in the group"));
+        }
+
+        let transfer_request = GroupTransferRequest::new(from, to);
+        GroupTransferRequestStore::insert_by_key(group_id, transfer_request)
+    }
+
+    pub fn cancel_transfer_group_ownership_request(
+        group_id: u64,
+        from: Principal,
+    ) -> Result<bool, ApiError> {
+        // if there is no transfer request for this group, return an error
+        GroupTransferRequestStore::get(group_id)?;
+
+        // if the caller is not the owner of the group, return an error
+        let (_, group) = GroupStore::get(group_id)?;
+        if group.owner != from {
+            return Err(ApiError::unauthorized()
+                .add_message("You don't have the ability to cancel the transfer request"));
+        }
+
+        Ok(GroupTransferRequestStore::remove(group_id))
+    }
+
+    pub fn accept_or_decline_transfer_group_ownership_request(
+        group_id: u64,
+        accept: bool,
+    ) -> Result<bool, ApiError> {
+        // if there is no transfer request for this group, return an error
+        let (_, request) = GroupTransferRequestStore::get(group_id)?;
+
+        // if the caller is not the intended recipient, return an error
+        if caller() != request.to {
+            return Err(ApiError::unauthorized().add_message("You are not the intended recipient"));
+        }
+
+        // if the recipient is not in the group, return an error
+        let (_, member) = MemberStore::get(request.to)?;
+        if !member.is_group_joined(&group_id) {
+            GroupTransferRequestStore::remove(group_id);
+            return Err(ApiError::bad_request().add_message("Recipient is not in the group"));
+        }
+
+        if accept {
+            Self::transfer_group_ownership(group_id, request.from, request.to)
+        } else {
+            Ok(GroupTransferRequestStore::remove(group_id))
+        }
+    }
+
+    pub fn transfer_group_ownership(
+        group_id: u64,
+        from: Principal,
+        to: Principal,
+    ) -> Result<bool, ApiError> {
+        // if the group owner is not the from principal, return an error
+        let (_, mut group) = GroupStore::get(group_id)?;
+        if group.owner != from {
+            return Err(ApiError::unauthorized().add_message("You are not the owner of the group"));
+        }
+
+        // update the group owner
+        group.owner = to;
+        GroupStore::update(group_id, group)?;
+
+        // update the roles of the members
+        let (_, mut old_owner) = MemberStore::get(from)?;
+        let (_, mut new_owner) = MemberStore::get(to)?;
+
+        old_owner.replace_roles(&group_id, vec![MEMBER_ROLE.to_string()]);
+        new_owner.replace_roles(&group_id, vec![OWNER_ROLE.to_string()]);
+
+        MemberStore::update(from, old_owner)?;
+        MemberStore::update(to, new_owner)?;
+
+        // remove the transfer request
+        Ok(GroupTransferRequestStore::remove(group_id))
+    }
 }
 
 impl GroupValidation {
@@ -1296,7 +1405,7 @@ impl GroupValidation {
         let validated_member = match group.privacy {
             // If the group is public, add the member to the group
             Public => {
-                member.add_joined(group_id, vec!["member".to_string()]);
+                member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                 let group_member_principals = GroupCalls::get_group_members(group_id)?
                     .iter()
                     .map(|member| member.principal)
@@ -1348,7 +1457,7 @@ impl GroupValidation {
                             }
                         }
                         if is_valid {
-                            member.add_joined(group_id, vec!["member".to_string()]);
+                            member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                             member_collection.add_member(caller);
 
                             // notify the reward buffer store that the group member count has changed
@@ -1376,7 +1485,7 @@ impl GroupValidation {
                             }
                         }
                         if is_valid {
-                            member.add_joined(group_id, vec!["member".to_string()]);
+                            member.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
                             member_collection.add_member(caller);
 
                             // notify the reward buffer store that the group member count has changed

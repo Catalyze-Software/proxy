@@ -3,6 +3,11 @@ use crate::models::{
     role::Role,
 };
 
+pub static OWNER_ROLE: &str = "owner";
+pub static ADMIN_ROLE: &str = "admin";
+pub static MODERATOR_ROLE: &str = "moderator";
+pub static MEMBER_ROLE: &str = "member";
+
 pub fn read_only_permission_actions() -> PermissionActions {
     PermissionActions::new(false, true, false, false)
 }
@@ -22,28 +27,28 @@ pub fn all_access_permission_actions() -> PermissionActions {
 pub fn default_roles() -> Vec<Role> {
     vec![
         Role::new(
-            "owner".into(),
+            OWNER_ROLE.into(),
             true,
             all_access_permissions(),
             "#FFB800".into(),
             None,
         ),
         Role::new(
-            "admin".into(),
+            ADMIN_ROLE.into(),
             true,
             all_access_permissions(),
             "#F56E00".into(),
             None,
         ),
         Role::new(
-            "moderator".into(),
+            MODERATOR_ROLE.into(),
             true,
             moderator_permissions(),
             "#06E143".into(),
             None,
         ),
         Role::new(
-            "member".into(),
+            MEMBER_ROLE.into(),
             true,
             read_only_permissions(),
             "#7A9CF2".into(),

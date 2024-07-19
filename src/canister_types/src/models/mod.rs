@@ -4,6 +4,7 @@ pub mod asset;
 pub mod boosted;
 pub mod date_range;
 pub mod filter_type;
+pub mod group_transfer_request;
 pub mod location;
 pub mod notification;
 pub mod paged_response;

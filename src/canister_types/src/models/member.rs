@@ -4,7 +4,10 @@ use candid::{CandidType, Deserialize, Principal};
 use ic_cdk::api::time;
 use serde::Serialize;
 
-use crate::impl_storable_for;
+use crate::{
+    impl_storable_for,
+    misc::role_misc::{ADMIN_ROLE, MEMBER_ROLE, MODERATOR_ROLE, OWNER_ROLE},
+};
 
 use super::invite_type::InviteType;
 
@@ -41,7 +44,7 @@ impl Member {
     pub fn get_owned(&self) -> Vec<u64> {
         self.joined
             .iter()
-            .filter(|(_, v)| v.roles.contains(&"owner".to_string()))
+            .filter(|(_, v)| v.roles.contains(&OWNER_ROLE.to_string()))
             .map(|(k, _)| *k)
             .collect()
     }
@@ -95,7 +98,7 @@ impl Member {
 
     pub fn turn_invite_into_joined(&mut self, group_id: u64) {
         self.invites.remove(&group_id);
-        self.add_joined(group_id, vec!["member".to_string()]);
+        self.add_joined(group_id, vec![MEMBER_ROLE.to_string()]);
     }
 
     pub fn remove_invite(&mut self, group_id: u64) {
@@ -110,19 +113,19 @@ impl Member {
     }
 
     pub fn is_group_owner(&self, group_id: &u64) -> bool {
-        self.has_group_role(group_id, &"owner".to_string())
+        self.has_group_role(group_id, &OWNER_ROLE.to_string())
     }
 
     pub fn is_group_admin(&self, group_id: &u64) -> bool {
-        self.has_group_role(group_id, &"admin".to_string())
+        self.has_group_role(group_id, &ADMIN_ROLE.to_string())
     }
 
     pub fn is_group_moderator(&self, group_id: &u64) -> bool {
-        self.has_group_role(group_id, &"moderator".to_string())
+        self.has_group_role(group_id, &MODERATOR_ROLE.to_string())
     }
 
     pub fn is_group_member(&self, group_id: &u64) -> bool {
-        self.has_group_role(group_id, &"member".to_string())
+        self.has_group_role(group_id, &MEMBER_ROLE.to_string())
     }
 
     pub fn is_group_invited(&self, group_id: &u64) -> bool {
