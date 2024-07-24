@@ -4,8 +4,7 @@ use candid::Principal;
 use canister_types::models::{user_notifications::UserNotifications, websocket_message::WSMessage};
 use ic_cdk::api::time;
 use ic_websocket_cdk::{
-    ws_send, OnCloseCallbackArgs, OnMessageCallbackArgs, OnOpenCallbackArgs, WsHandlers,
-    WsInitParams,
+    send, OnCloseCallbackArgs, OnMessageCallbackArgs, OnOpenCallbackArgs, WsHandlers, WsInitParams,
 };
 
 use crate::storage::{RewardBufferStore, StorageQueryable, UserNotificationStore};
@@ -59,7 +58,7 @@ impl Websocket {
     }
 
     pub fn send_message(principal: Principal, msg: WSMessage) {
-        match ws_send(principal, msg.serialize()) {
+        match send(principal, msg.serialize()) {
             Ok(_) => {}
             Err(e) => {
                 Self::log_error(e.to_string());
