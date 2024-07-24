@@ -831,6 +831,9 @@ service : () -> {
   get_event_invites : (nat64, nat64) -> (Result_21) query;
   get_event_invites_with_profiles : (nat64) -> (Result_22) query;
   get_events : (nat64, nat64, EventSort, vec EventFilter) -> (Result_23) query;
+  get_from_group_transfer_requests : () -> (
+      vec record { nat64; GroupTransferRequest },
+    ) query;
   get_group : (nat64) -> (Result_9) query;
   get_group_by_name : (text) -> (Result_9) query;
   get_group_invites : (nat64) -> (Result_24) query;
@@ -872,6 +875,9 @@ service : () -> {
   get_self_groups : () -> (vec GroupResponse) query;
   get_self_member : () -> (Result_5) query;
   get_starred_by_subject_type : (SubjectType) -> (vec nat64) query;
+  get_to_group_transfer_requests : () -> (
+      vec record { nat64; GroupTransferRequest },
+    ) query;
   get_topic : (TopicKind, nat64) -> (Result_13) query;
   get_topics : (TopicKind, vec nat64) -> (Result_17) query;
   get_unread_notifications : () -> (vec NotificationResponse) query;
