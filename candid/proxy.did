@@ -120,6 +120,7 @@ type EventCallerData = record {
   joined : opt JoinedAttendeeResponse;
   invite : opt InviteAttendeeResponse;
 };
+type EventCollection = record { events : vec nat64 };
 type EventFilter = variant {
   Ids : vec nat64;
   Tag : nat32;
@@ -184,6 +185,13 @@ type EventsCount = record {
   past : nat64;
   future : nat64;
   attending : nat64;
+};
+type FriendRequest = record {
+  to : principal;
+  created_at : nat64;
+  requested_by : principal;
+  notification_id : opt nat64;
+  message : text;
 };
 type FriendRequestResponse = record {
   id : nat64;
@@ -338,6 +346,10 @@ type Manifest = record { entries : vec ChunkData };
 type Member = record {
   invites : vec record { nat64; MemberInvite };
   joined : vec record { nat64; Join };
+};
+type MemberCollection = record {
+  members : vec principal;
+  invites : vec principal;
 };
 type MemberInvite = record {
   updated_at : nat64;
@@ -545,6 +557,14 @@ type RelationNotificationType = variant {
   FriendRequestAccept : FriendRequestResponse;
 };
 type RelationType = variant { Blocked; Friend };
+type Report = record {
+  subject : Subject;
+  created_on : nat64;
+  notification_id : opt nat64;
+  group_id : opt nat64;
+  message : text;
+  reported_by : principal;
+};
 type ReportFilter = variant {
   SubjectType : SubjectType;
   None;
@@ -897,6 +917,32 @@ service : () -> {
   log_size : () -> (nat64) query;
   log_with_caller : (PostLog) -> (Result_35);
   mark_notifications_as_read : (vec nat64, bool) -> (Result_36);
+  mig_attendee_get_all : () -> (vec record { principal; Attendee }) query;
+  mig_boosted_get_all : () -> (vec record { nat64; Boost }) query;
+  mig_categories_get_all : () -> (vec record { nat64; text }) query;
+  mig_event_attendees_get_all : () -> (
+      vec record { nat64; MemberCollection },
+    ) query;
+  mig_events_get_all : () -> (vec record { nat64; Event }) query;
+  mig_friend_requests_get_all : () -> (
+      vec record { nat64; FriendRequest },
+    ) query;
+  mig_group_events_get_all : () -> (
+      vec record { nat64; EventCollection },
+    ) query;
+  mig_group_members_get_all : () -> (
+      vec record { nat64; MemberCollection },
+    ) query;
+  mig_groups_get_all : () -> (vec record { nat64; Group }) query;
+  mig_members_get_all : () -> (vec record { principal; Member }) query;
+  mig_notifications_get_all : () -> (vec record { nat64; Notification }) query;
+  mig_profiles_get_all : () -> (vec record { principal; Profile }) query;
+  mig_reports_get_all : () -> (vec record { nat64; Report }) query;
+  mig_skills_get_all : () -> (vec record { nat64; text }) query;
+  mig_tags_get_all : () -> (vec record { nat64; text }) query;
+  mig_user_notifications_get_all : () -> (
+      vec record { principal; vec record { nat64; UserNotificationData } },
+    ) query;
   migrate : () -> (vec vec text);
   multisig_new_proposal_notification : (
       vec principal,
