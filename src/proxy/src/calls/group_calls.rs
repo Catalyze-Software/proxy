@@ -6,15 +6,6 @@ use crate::{
     logic::group_logic::GroupCalls,
 };
 
-/// # Group methods
-/// # TODO:
-/// * Check if the guard are correctly placed
-/// * (Group) role based authentication
-
-/// # Questions
-/// * Should the `get_groups` / `get_groups_by_id` give back a more summier response per group compared to the `get_group` function?
-/// And what about the public / private access of these calls?\
-///
 use candid::Principal;
 use canister_types::models::{
     api_error::ApiError,
