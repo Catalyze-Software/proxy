@@ -5,15 +5,7 @@ use crate::{
     },
     logic::event_logic::EventCalls,
 };
-/// # Event methods
-/// # TODO:
-/// * Check if the guard are correctly placed
-/// * (Group) role based authentication
 
-/// # Questions
-/// * Should the `get_events` give back a more summier response per group compared to the `get_event` function?
-/// And what about the public / private access of these calls?
-///
 use candid::Principal;
 use canister_types::models::{
     api_error::ApiError,
