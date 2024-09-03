@@ -3,16 +3,21 @@ use crate::storage::{
     RewardBufferStore, RewardTimerStore, StorageQueryable, StorageUpdateable,
 };
 
-use canister_types::models::reward::{Activity, GroupReward, RewardDataPackage, UserActivity};
+use canister_types::models::reward::{
+    Activity, GroupReward, RewardDataPackage, RewardableActivity, UserActivity,
+};
 use ic_cdk::call;
 
 pub fn process_buffer() -> RewardDataPackage {
-    let rewardables = RewardBufferStore::get_all();
+    let rewardables: Vec<RewardableActivity> = RewardBufferStore::get_all()
+        .into_iter()
+        .map(|(_, activity)| activity)
+        .collect();
 
     let mut group_member_counts: Vec<GroupReward> = Vec::new();
     let mut user_activity: Vec<UserActivity> = Vec::new();
 
-    for (_, rewardable) in rewardables.iter() {
+    for rewardable in rewardables.iter() {
         match rewardable.get_activity() {
             Activity::GroupMemberCount(id) => {
                 // collect owner, group id and member count

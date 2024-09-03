@@ -883,8 +883,15 @@ service : () -> {
   get_profile : (principal) -> (Result_10) query;
   get_profiles : (vec principal) -> (vec ProfileResponse) query;
   get_relations : (RelationType) -> (vec principal) query;
+  get_relations_by_principal : (principal, RelationType) -> (
+      vec principal,
+    ) query;
   get_relations_count : (RelationType) -> (nat64) query;
+  get_relations_count_by_principal : (principal, RelationType) -> (nat64) query;
   get_relations_with_profiles : (RelationType) -> (vec ProfileResponse) query;
+  get_relations_with_profiles_by_principal : (principal, RelationType) -> (
+      vec ProfileResponse,
+    ) query;
   get_remaining_boost_time_in_seconds : (Subject) -> (Result_14) query;
   get_report : (nat64, nat64) -> (Result_11) query;
   get_reports : (nat64, nat64, ReportSort, vec ReportFilter, nat64) -> (
