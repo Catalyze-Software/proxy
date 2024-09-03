@@ -19,7 +19,7 @@ use canister_types::models::{
     subject::{Subject, SubjectResponse, SubjectType},
     wallet::PostWallet,
 };
-use ic_cdk::{query, update};
+use ic_cdk::{caller, query, update};
 
 /// Adds a profile to the canister - [`[update]`](update)
 /// # Arguments
@@ -370,7 +370,23 @@ pub fn unblock_user(principal: Principal) -> Result<ProfileResponse, ApiError> {
 /// This function is guarded by the [`has_access`](has_access) function.
 #[query(guard = "has_access")]
 pub fn get_relations(relation_type: RelationType) -> Vec<Principal> {
-    ProfileCalls::get_relations(relation_type)
+    ProfileCalls::get_relations(caller(), relation_type)
+}
+
+/// Get the current relation for the principal based on the relation type - [`[query]`](query)
+/// # Arguments
+/// * `principal` - The principal to get the relation for
+/// * `relation_type` - The relation type to get the relation for `friend` or `blocked`
+/// # Returns
+/// * `Vec<Principal>` - The principals of the relations
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query(guard = "has_access")]
+pub fn get_relations_by_principal(
+    principal: Principal,
+    relation_type: RelationType,
+) -> Vec<Principal> {
+    ProfileCalls::get_relations(principal, relation_type)
 }
 
 /// Get the current relation profiles for the caller based on the relation type - [`[query]`](query)
@@ -382,7 +398,35 @@ pub fn get_relations(relation_type: RelationType) -> Vec<Principal> {
 /// This function is guarded by the [`has_access`](has_access) function.
 #[query(guard = "has_access")]
 pub fn get_relations_with_profiles(relation_type: RelationType) -> Vec<ProfileResponse> {
-    ProfileCalls::get_relations_with_profiles(relation_type)
+    ProfileCalls::get_relations_with_profiles(caller(), relation_type)
+}
+
+/// Get the current relation profiles for the principal based on the relation type - [`[query]`](query)
+/// # Arguments
+/// /// * `principal` - The principal to get the relation for
+/// * `relation_type` - The relation type to get the relation for `friend` or `blocked`
+/// # Returns
+/// * `Vec<ProfileResponse>` - The principals of the relations
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query(guard = "has_access")]
+pub fn get_relations_with_profiles_by_principal(
+    principal: Principal,
+    relation_type: RelationType,
+) -> Vec<ProfileResponse> {
+    ProfileCalls::get_relations_with_profiles(principal, relation_type)
+}
+
+/// Get the current relation count for the caller based on the relation type - [`[query]`](query)
+/// # Arguments
+/// * `relation_type` - The relation type to get the relation count for `friend` or `blocked`
+/// # Returns
+/// * `u64` - The relation count that was found
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query(guard = "has_access")]
+pub fn get_relations_count(relation_type: RelationType) -> u64 {
+    ProfileCalls::get_relations(caller(), relation_type).len() as u64
 }
 
 /// Get the current relation count for the caller based on the relation type - [`[query]`](query)
@@ -394,8 +438,8 @@ pub fn get_relations_with_profiles(relation_type: RelationType) -> Vec<ProfileRe
 /// # Note
 /// This function is guarded by the [`has_access`](has_access) function.
 #[query(guard = "has_access")]
-pub fn get_relations_count(relation_type: RelationType) -> u64 {
-    ProfileCalls::get_relations(relation_type).len() as u64
+pub fn get_relations_count_by_principal(principal: Principal, relation_type: RelationType) -> u64 {
+    ProfileCalls::get_relations(principal, relation_type).len() as u64
 }
 
 /// Approve a code of conduct version - [`[update]`](update)

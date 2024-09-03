@@ -336,8 +336,8 @@ impl ProfileCalls {
         Err(ApiError::not_found().add_message("User not blocked"))
     }
 
-    pub fn get_relations(relation_type: RelationType) -> Vec<Principal> {
-        if let Ok((_, profile)) = ProfileStore::get(caller()) {
+    pub fn get_relations(principal: Principal, relation_type: RelationType) -> Vec<Principal> {
+        if let Ok((_, profile)) = ProfileStore::get(principal) {
             return profile
                 .relations
                 .iter()
@@ -353,8 +353,11 @@ impl ProfileCalls {
         vec![]
     }
 
-    pub fn get_relations_with_profiles(relation_type: RelationType) -> Vec<ProfileResponse> {
-        Self::get_profiles(ProfileCalls::get_relations(relation_type))
+    pub fn get_relations_with_profiles(
+        principal: Principal,
+        relation_type: RelationType,
+    ) -> Vec<ProfileResponse> {
+        Self::get_profiles(ProfileCalls::get_relations(principal, relation_type))
     }
 
     // TODO: add logic to check the current version of these documents and add something to prompt the user to approve the latest version
