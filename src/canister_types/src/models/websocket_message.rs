@@ -14,13 +14,7 @@ pub enum WSMessage {
 
 impl WSMessage {
     pub fn serialize(&self) -> Vec<u8> {
-        match encode_one(self) {
-            Ok(value) => value,
-            Err(_) => {
-                // WebsocketMessage::Error(ApiError::deserialize().add_info("Serialization error"))
-                vec![]
-            }
-        }
+        encode_one(self).unwrap_or_default()
     }
 
     pub fn deserialize(data: &[u8]) -> Self {

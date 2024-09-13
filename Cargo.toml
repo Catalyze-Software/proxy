@@ -4,9 +4,9 @@ resolver = "2"
 
 [workspace.dependencies]
 candid = "0.10"
-ic-cdk = "0.15"
+ic-cdk = "0.16"
 ic-stable-structures = "0.6"
 serde = "1.0"
 serde_json = "1.0"
-ic-ledger-types = "0.12"
+ic-ledger-types = "0.13"
 
