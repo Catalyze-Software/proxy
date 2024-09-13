@@ -390,6 +390,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "ic-cdk-timers"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c7c528bbb3d4d934b43a364855995d318649217c7510f40f92ad52eba3ff7be"
+dependencies = [
+ "futures",
+ "ic-cdk 0.16.0",
+ "ic0",
+ "serde",
+ "serde_bytes",
+ "slotmap",
+]
+
+[[package]]
 name = "ic-certification"
 version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -435,7 +449,7 @@ dependencies = [
  "candid",
  "ic-cdk 0.15.1",
  "ic-cdk-macros 0.15.0",
- "ic-cdk-timers",
+ "ic-cdk-timers 0.9.0",
  "ic-certification",
  "serde",
  "serde_bytes",
@@ -615,7 +629,7 @@ dependencies = [
  "canister_types",
  "email_address",
  "ic-cdk 0.16.0",
- "ic-cdk-timers",
+ "ic-cdk-timers 0.10.0",
  "ic-ledger-types",
  "ic-stable-structures",
  "ic-websocket-cdk",

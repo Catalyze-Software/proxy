@@ -18,7 +18,7 @@ serde_json =  {workspace = true}
 ic-ledger-types =  {workspace = true}
 
 ic-websocket-cdk = "0.4"
-ic-cdk-timers = "0.9"
+ic-cdk-timers = "0.10"
 email_address = "0.2"
 unicode-segmentation = "1"
 canister_types = { path = "../canister_types" }
