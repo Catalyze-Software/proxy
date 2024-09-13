@@ -1,6 +1,6 @@
 [package]
 name = "proxy"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -18,7 +18,7 @@ serde_json =  {workspace = true}
 ic-ledger-types =  {workspace = true}
 
 ic-websocket-cdk = "0.4"
-ic-cdk-timers = "0.10"
+ic-cdk-timers = "0.9"
 email_address = "0.2"
 unicode-segmentation = "1"
 canister_types = { path = "../canister_types" }
