@@ -470,12 +470,6 @@ impl GroupCalls {
             );
         }
 
-        let (_, group) = GroupStore::get(group_id)?;
-        // Check if the group is invite only
-        if group.privacy == Privacy::InviteOnly {
-            return Err(ApiError::bad_request().add_message("Group is invite only"));
-        }
-
         // we dont have the `invitee_member.notification_id` at this point, not sure if needed
         let invite_member_response =
             InviteMemberResponse::new(invitee_principal, invitee_member.clone(), group_id);
