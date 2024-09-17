@@ -31,6 +31,10 @@ pub fn has_access() -> Result<(), String> {
     // Check if the caller is anonymous
     is_not_anonymous()?;
 
+    if is_prod_developer().is_ok() {
+        return Ok(());
+    }
+
     // Get the caller's profile
     match ProfileStore::get(caller()) {
         Err(err) => Err(err.to_string()),
