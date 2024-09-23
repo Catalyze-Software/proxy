@@ -73,6 +73,20 @@ pub fn query_profiles(query: String) -> Vec<ProfileResponse> {
     ProfileCalls::query_profiles(query)
 }
 
+/// Get a profile by name - [`[query]`](query)
+/// # Arguments
+/// * `name` - The name of the group
+/// # Returns
+/// * `ProfileResponse` - The group
+/// # Errors
+/// * `ApiError` - If something went wrong while getting the group
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query]
+pub fn get_profile_by_name(name: String) -> Result<ProfileResponse, ApiError> {
+    ProfileCalls::get_profile_by_name(name)
+}
+
 /// Edit the caller his a profile - [`[update]`](update)
 /// # Arguments
 /// * `update_profile` - The profile to update
