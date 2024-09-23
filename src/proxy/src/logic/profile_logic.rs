@@ -127,6 +127,18 @@ impl ProfileCalls {
         ProfileResponse::from_result(profile_result)
     }
 
+    pub fn get_profile_by_name(name: String) -> Result<ProfileResponse, ApiError> {
+        let _name = &name.to_lowercase().replace(' ', "-");
+
+        if let Some((id, _)) =
+            ProfileStore::find(|_, g| &g.username.to_lowercase().replace(' ', "-") == _name)
+        {
+            return Self::get_profile(id);
+        };
+
+        Err(ApiError::not_found().add_message("Group not found"))
+    }
+
     pub fn get_profiles(principals: Vec<Principal>) -> Vec<ProfileResponse> {
         let profiles_result = ProfileStore::get_many(principals);
         profiles_result
