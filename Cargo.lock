@@ -609,7 +609,7 @@ dependencies = [
 
 [[package]]
 name = "proxy"
-version = "0.2.10"
+version = "0.2.11"
 dependencies = [
  "candid",
  "canister_types",
