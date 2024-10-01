@@ -15,6 +15,7 @@ mod logger_storage;
 mod member_storage;
 mod notification_storage;
 mod profile_storage;
+pub mod referral_storage;
 mod report_storage;
 pub mod reward_canister_storage;
 pub mod reward_storage;

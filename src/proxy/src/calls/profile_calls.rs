@@ -31,8 +31,11 @@ use ic_cdk::{caller, query, update};
 /// # Note
 /// This function is guarded by the [`is_not_anonymous`](is_not_anonymous) function.
 #[update(guard = "is_not_anonymous")]
-pub fn add_profile(post_profile: PostProfile) -> Result<ProfileResponse, ApiError> {
-    ProfileCalls::add_profile(post_profile)
+pub fn add_profile(
+    post_profile: PostProfile,
+    referral: Option<Principal>,
+) -> Result<ProfileResponse, ApiError> {
+    ProfileCalls::add_profile(post_profile, referral)
 }
 
 /// Gets a profile by the given user principal - [`[query]`](query)
@@ -47,6 +50,18 @@ pub fn add_profile(post_profile: PostProfile) -> Result<ProfileResponse, ApiErro
 #[query(guard = "has_access")]
 pub fn get_profile(principal: Principal) -> Result<ProfileResponse, ApiError> {
     ProfileCalls::get_profile(principal)
+}
+
+/// Gets a principal of the profile you were referred by - [`[query]`](query)
+/// # Arguments
+/// * `Principal` - The principal of the profile you were referred by
+/// # Errors
+/// * `ApiError` - If something went wrong while getting the profile
+/// # Note
+/// This function is guarded by the [`has_access`](has_access) function.
+#[query(guard = "has_access")]
+pub fn get_referred_by() -> Result<Principal, ApiError> {
+    ProfileCalls::get_referred_by()
 }
 
 /// Gets profiles by the given user principals - [`[query]`](query)
