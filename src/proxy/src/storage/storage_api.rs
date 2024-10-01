@@ -4,7 +4,8 @@ use canister_types::models::{
     event_collection::EventCollection, friend_request::FriendRequest, group::Group,
     group_transfer_request::GroupTransferRequest, log::Logger, member::Member,
     member_collection::MemberCollection, notification::Notification, profile::Profile,
-    report::Report, reward::RewardableActivity, user_notifications::UserNotifications,
+    referral::Referral, report::Report, reward::RewardableActivity,
+    user_notifications::UserNotifications,
 };
 use ic_stable_structures::{
     memory_manager::{MemoryId, MemoryManager, VirtualMemory},
@@ -56,6 +57,7 @@ pub static REWARD_BUFFER_MEMORY_ID: MemoryId = MemoryId::new(20);
 pub static REWARD_CANISTER_MEMORY_ID: MemoryId = MemoryId::new(21);
 
 pub static GROUP_TRANSFER_REQUESTS_MEMORY_ID: MemoryId = MemoryId::new(22);
+pub static REFERRAL_MEMORY_ID: MemoryId = MemoryId::new(23);
 
 /// A reference to a `StableBTreeMap` that is wrapped in a `RefCell`.
 ///# Generics
@@ -358,6 +360,10 @@ thread_local! {
 
     pub static GROUP_TRANSFER_REQUESTS: StorageRef<u64, GroupTransferRequest> = RefCell::new(
         StableBTreeMap::init(MEMORY_MANAGER.with(|p| p.borrow().get(GROUP_TRANSFER_REQUESTS_MEMORY_ID)))
+    );
+
+    pub static REFERRALS: StorageRef<Principal, Referral> = RefCell::new(
+        StableBTreeMap::init(MEMORY_MANAGER.with(|p| p.borrow().get(REFERRAL_MEMORY_ID)))
     );
 
 }

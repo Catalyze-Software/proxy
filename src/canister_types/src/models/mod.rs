@@ -9,6 +9,7 @@ pub mod location;
 pub mod notification;
 pub mod paged_response;
 pub mod privacy;
+pub mod referral;
 pub mod role;
 pub mod sort_direction;
 pub mod storage;

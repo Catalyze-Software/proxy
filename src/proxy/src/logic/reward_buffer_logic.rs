@@ -3,6 +3,7 @@ use crate::storage::{
     RewardBufferStore, RewardTimerStore, StorageQueryable, StorageUpdateable,
 };
 
+use candid::Principal;
 use canister_types::models::reward::{
     Activity, GroupReward, RewardDataPackage, RewardableActivity, UserActivity,
 };
@@ -16,6 +17,8 @@ pub fn process_buffer() -> RewardDataPackage {
 
     let mut group_member_counts: Vec<GroupReward> = Vec::new();
     let mut user_activity: Vec<UserActivity> = Vec::new();
+    let mut user_referrals: Vec<Principal> = Vec::new();
+    let mut filled_profiles: Vec<Principal> = Vec::new();
 
     for rewardable in rewardables.iter() {
         match rewardable.get_activity() {
@@ -34,12 +37,16 @@ pub fn process_buffer() -> RewardDataPackage {
             Activity::UserActivity(principal) => {
                 user_activity.push(UserActivity::new(principal, rewardable.get_timestamp()));
             }
+            Activity::UserReferral(principal) => user_referrals.push(principal),
+            Activity::UserProfileFilled(principal) => filled_profiles.push(principal),
         }
     }
 
     RewardDataPackage {
         group_member_counts,
         user_activity,
+        user_referrals,
+        filled_profiles,
     }
 }
 

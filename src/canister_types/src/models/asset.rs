@@ -25,3 +25,9 @@ impl fmt::Display for Asset {
         }
     }
 }
+
+impl Asset {
+    pub fn is_empty(&self) -> bool {
+        matches!(self, Asset::None)
+    }
+}

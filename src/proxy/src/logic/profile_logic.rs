@@ -4,9 +4,9 @@ use super::{
 use crate::{
     helpers::validator::Validator,
     storage::{
-        AttendeeStore, EventAttendeeStore, EventStore, GroupMemberStore, GroupStore, MemberStore,
-        ProfileStore, StorageInsertableByKey, StorageQueryable, StorageUpdateable,
-        UserNotificationStore,
+        referral_storage::ReferralStore, AttendeeStore, EventAttendeeStore, EventStore,
+        GroupMemberStore, GroupStore, MemberStore, ProfileStore, RewardBufferStore,
+        StorageInsertableByKey, StorageQueryable, StorageUpdateable, UserNotificationStore,
     },
 };
 use candid::Principal;
@@ -15,6 +15,7 @@ use canister_types::models::{
     document_details::DocumentDetails,
     member_collection::MemberCollection,
     profile::{PostProfile, Profile, ProfileResponse, UpdateProfile},
+    referral::Referral,
     relation_type::RelationType,
     subject::{Subject, SubjectResponse, SubjectType},
     user_notifications::UserNotifications,
@@ -27,12 +28,29 @@ pub struct ProfileCalls;
 pub struct ProfileValidation;
 
 impl ProfileCalls {
-    pub fn add_profile(post_profile: PostProfile) -> Result<ProfileResponse, ApiError> {
+    pub fn add_profile(
+        post_profile: PostProfile,
+        referral: Option<Principal>,
+    ) -> Result<ProfileResponse, ApiError> {
         ProfileValidation::validate_post_profile(&post_profile)?;
 
         let post_profile_username = post_profile.username.to_lowercase();
         if ProfileStore::find(|_, p| p.username.to_lowercase() == post_profile_username).is_some() {
             return Err(ApiError::duplicate().add_message("Username already exists"));
+        }
+
+        if let Some(referrer) = referral {
+            match ReferralStore::get(caller()) {
+                Ok(_) => {
+                    return Err(
+                        ApiError::bad_request().add_message("Profile already has a referral")
+                    );
+                }
+                Err(_) => {
+                    ReferralStore::insert_by_key(caller(), Referral::new(referrer))?;
+                    RewardBufferStore::notify_referral_used(referrer);
+                }
+            }
         }
 
         let new_profile = Profile::from(post_profile);
@@ -45,11 +63,21 @@ impl ProfileCalls {
         ProfileResponse::from_result(stored_profile)
     }
 
+    pub fn get_referred_by() -> Result<Principal, ApiError> {
+        match ReferralStore::get(caller()) {
+            Ok((_, referral)) => Ok(referral.referred_by),
+            Err(_) => Err(ApiError::not_found().add_message("Referral not found")),
+        }
+    }
     pub fn update_profile(update_profile: UpdateProfile) -> Result<ProfileResponse, ApiError> {
         ProfileValidation::validate_update_profile(&update_profile)?;
 
         let (_, existing_profile) = ProfileStore::get(caller())?;
         let updated_profile = existing_profile.update(update_profile);
+
+        if updated_profile.is_filled() {
+            RewardBufferStore::notify_profile_filled(caller());
+        }
 
         let updated_profile_result = ProfileStore::update(caller(), updated_profile);
         ProfileResponse::from_result(updated_profile_result)

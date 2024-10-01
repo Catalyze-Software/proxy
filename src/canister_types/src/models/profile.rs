@@ -113,6 +113,24 @@ impl Profile {
     pub fn is_pinned(&self, subject: &Subject) -> bool {
         self.pinned.contains(subject)
     }
+
+    pub fn is_filled(&self) -> bool {
+        let is_string_content_filled = vec![
+            &self.first_name,
+            &self.last_name,
+            &self.email,
+            &self.country,
+            &self.about,
+        ]
+        .into_iter()
+        .all(|s| !s.is_empty());
+
+        let is_images_filled = !self.profile_image.is_empty() && !self.banner_image.is_empty();
+
+        let is_interests_filled = self.interests.len() >= 3;
+
+        is_string_content_filled && is_images_filled && is_interests_filled
+    }
 }
 
 impl From<PostProfile> for Profile {
