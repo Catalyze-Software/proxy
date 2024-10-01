@@ -247,13 +247,7 @@ impl EventFilter {
         match self {
             EventFilter::None => true,
             EventFilter::Name(name) => event.name.to_lowercase().contains(&name.to_lowercase()),
-            EventFilter::StartDate(date) => {
-                if date.is_within(time()) {
-                    return true;
-                }
-
-                date.is_within(event.date.start_date())
-            }
+            EventFilter::StartDate(date) => date.is_within(event.date.start_date()),
             EventFilter::EndDate(date) => date.is_within(event.date.end_date()),
             EventFilter::Owner(owner) => *owner == event.owner,
             EventFilter::Groups(groups) => groups.contains(&event.group_id),
