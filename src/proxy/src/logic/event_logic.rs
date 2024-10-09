@@ -177,8 +177,12 @@ impl EventCalls {
         };
 
         let (attending, invited) = match AttendeeStore::get(caller()) {
-            Ok((_, attendee)) => (attendee.joined.len() as u64, attendee.invites.len() as u64),
-            Err(_) => (0, 0),
+            Ok((_, attendee)) => {
+                let joined = attendee.joined.keys().cloned().collect::<Vec<_>>();
+                let invites = attendee.invites.keys().cloned().collect();
+                (joined, invites)
+            }
+            Err(_) => (vec![], vec![]),
         };
 
         let new = events
@@ -191,8 +195,7 @@ impl EventCalls {
 
         let future = events
             .iter()
-            .filter(|(_, event)| event.date.is_after_start_date(time()))
-            .count() as u64;
+            .filter(|(_, event)| event.date.is_after_start_date(time()));
 
         let past = events
             .iter()
@@ -203,11 +206,17 @@ impl EventCalls {
 
         EventsCount {
             total: events.len() as u64,
-            attending,
-            invited,
+            attending: future
+                .clone()
+                .filter(|(id, _)| attending.contains(id))
+                .count() as u64,
+            invited: future
+                .clone()
+                .filter(|(id, _)| invited.contains(id))
+                .count() as u64,
             starred,
             new,
-            future,
+            future: future.count() as u64,
             past,
         }
     }
