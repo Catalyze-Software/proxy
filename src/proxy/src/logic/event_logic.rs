@@ -178,7 +178,7 @@ impl EventCalls {
 
         let (attending, invited) = match AttendeeStore::get(caller()) {
             Ok((_, attendee)) => {
-                let joined = attendee.joined.keys().cloned().collect::<Vec<_>>();
+                let joined = attendee.joined.keys().cloned().collect();
                 let invites = attendee.invites.keys().cloned().collect();
                 (joined, invites)
             }
