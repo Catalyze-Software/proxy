@@ -199,7 +199,7 @@ impl EventCalls {
 
         let past = events
             .iter()
-            .filter(|(_, event)| event.date.is_before_start_date(time()))
+            .filter(|(_, event)| event.date.is_before_end_date(time()))
             .count() as u64;
 
         let starred = ProfileCalls::get_starred_by_subject(SubjectType::Event).len() as u64;
