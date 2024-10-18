@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changes
 
-- fix
+- change past event filter logic
 
 ## [0.2.11]
 

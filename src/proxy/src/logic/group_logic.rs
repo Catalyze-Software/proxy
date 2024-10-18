@@ -447,6 +447,10 @@ impl GroupCalls {
         let member =
             GroupValidation::validate_member_join(caller(), group_id, &account_identifier).await?;
 
+        if member.joined.is_empty() {
+            RewardBufferStore::notify_first_group_joined(caller());
+        }
+
         MemberStore::update(caller(), member.clone())?;
         Ok(JoinedMemberResponse::new(caller(), member, group_id))
     }
@@ -516,6 +520,9 @@ impl GroupCalls {
             )?;
 
             if accept {
+                if member.joined.is_empty() {
+                    RewardBufferStore::notify_first_group_joined(caller());
+                }
                 member.turn_invite_into_joined(group_id);
                 GroupMemberStore::get(group_id).map(|(_, mut member_collection)| {
                     member_collection.create_member_from_invite(principal);

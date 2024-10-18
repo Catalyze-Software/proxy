@@ -19,6 +19,7 @@ pub fn process_buffer() -> RewardDataPackage {
     let mut user_activity: Vec<UserActivity> = Vec::new();
     let mut user_referrals: Vec<Principal> = Vec::new();
     let mut filled_profiles: Vec<Principal> = Vec::new();
+    let mut first_group_joined: Vec<Principal> = Vec::new();
 
     for rewardable in rewardables.iter() {
         match rewardable.get_activity() {
@@ -39,6 +40,7 @@ pub fn process_buffer() -> RewardDataPackage {
             }
             Activity::UserReferral(principal) => user_referrals.push(principal),
             Activity::UserProfileFilled(principal) => filled_profiles.push(principal),
+            Activity::FirstGroupJoined(principal) => first_group_joined.push(principal),
         }
     }
 
@@ -47,6 +49,7 @@ pub fn process_buffer() -> RewardDataPackage {
         user_activity,
         user_referrals,
         filled_profiles,
+        first_group_joined,
     }
 }
 
