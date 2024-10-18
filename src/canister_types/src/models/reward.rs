@@ -56,6 +56,7 @@ pub enum Activity {
     UserActivity(Principal),
     UserReferral(Principal),
     UserProfileFilled(Principal),
+    FirstGroupJoined(Principal),
 }
 
 impl Activity {
@@ -75,6 +76,7 @@ impl fmt::Display for Activity {
             Activity::UserActivity(_) => write!(f, "user_activity"),
             Activity::UserReferral(_) => write!(f, "user_referral"),
             Activity::UserProfileFilled(_) => write!(f, "user_profile_filled"),
+            Activity::FirstGroupJoined(_) => write!(f, "first_group_joined"),
         }
     }
 }
@@ -114,4 +116,5 @@ pub struct RewardDataPackage {
     pub user_activity: Vec<UserActivity>,
     pub user_referrals: Vec<Principal>,
     pub filled_profiles: Vec<Principal>,
+    pub first_group_joined: Vec<Principal>,
 }
