@@ -7,42 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.12]
 
-## Changes
+### Added
+
+- add first group join reward
+
+### Changes
 
 - change past event filter logic
 
 ## [0.2.11]
 
-## Added
+### Added
 
 - profile completion rewards
 - referal rewards
 
-## Removed
+### Removed
 
 - Custom logic for getting events by start date
 
 ## [0.2.10]
 
-## Added
+### Added
 
 - `get_profile_by_name` call
 
 ## [0.2.9]
 
-## Changed
+### Changed
 
 - Added production principal to `has_access` guard
 
 ## [0.2.8]
 
-## Changed
+### Changed
 
 - Remove group privacy check for invites
 
 ## [0.2.7]
 
-## Changed
+### Changed
 
 - Update packages
 
