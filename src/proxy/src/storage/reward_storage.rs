@@ -67,11 +67,6 @@ impl RewardBufferStore {
         let _ = RewardBufferStore::insert(activity);
     }
 
-    pub fn notify_active_user(principal: Principal) {
-        let activity = RewardableActivity::new(Activity::UserActivity(principal));
-        let _ = RewardBufferStore::insert(activity);
-    }
-
     pub fn notify_referral_used(principal: Principal) {
         let activity = RewardableActivity::new(Activity::UserReferral(principal));
         let _ = RewardBufferStore::insert(activity);
