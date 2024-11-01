@@ -1,0 +1,25 @@
+[package]
+name = "test_helper"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+path="lib.rs"
+
+[dependencies]
+candid = {workspace = true}
+pocket-ic ={ workspace = true}
+serde = {workspace = true}
+
+proxy = { path = "../proxy" }
+canister_types = { path = "../canister_types" }
+
+rand = "0.8"
+
+
+
+
+
+
+

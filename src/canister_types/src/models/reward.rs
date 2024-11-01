@@ -44,7 +44,7 @@ impl From<RewardableActivity> for RewardableActivityResponse {
     }
 }
 
-#[derive(CandidType, Deserialize, Serialize)]
+#[derive(CandidType, Deserialize, Serialize, Debug)]
 pub struct RewardableActivityResponse {
     pub activity: Activity,
     pub timestamp: u64,

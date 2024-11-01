@@ -191,7 +191,7 @@ fn http_request(req: HttpRequest) -> HttpResponse {
             "changelog" => HttpResponse {
                 status_code: 200,
                 headers: vec![],
-                body: include_bytes!("../../../../CHANGELOG.md").to_vec(),
+                body: include_bytes!("../../../CHANGELOG.md").to_vec(),
             },
             _ => permission_denied,
         },

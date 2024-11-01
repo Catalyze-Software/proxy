@@ -1,4 +1,9 @@
-type Activity = variant { UserActivity : principal; GroupMemberCount : nat64 };
+type Activity = variant {
+  FirstGroupJoined : principal;
+  UserReferral : principal;
+  UserProfileFilled : principal;
+  GroupMemberCount : nat64;
+};
 type Address = record {
   street : text;
   country : text;
@@ -806,6 +811,7 @@ service : () -> {
   add_group : (PostGroup, opt text) -> (Result_9);
   add_pinned : (Subject) -> (Result_10);
   add_profile : (PostProfile) -> (Result_10);
+  add_profile_by_referral : (PostProfile, principal) -> (Result_10);
   add_report : (PostReport) -> (Result_11);
   add_role_to_group : (nat64, text, text, nat64) -> (Result_12);
   add_starred : (Subject) -> (Result_10);
@@ -881,7 +887,9 @@ service : () -> {
     ) query;
   get_pinned_by_subject_type : (SubjectType) -> (vec SubjectResponse) query;
   get_profile : (principal) -> (Result_10) query;
+  get_profile_by_name : (text) -> (Result_10) query;
   get_profiles : (vec principal) -> (vec ProfileResponse) query;
+  get_referred_by : () -> (Result_1) query;
   get_relations : (RelationType) -> (vec principal) query;
   get_relations_by_principal : (principal, RelationType) -> (
       vec principal,

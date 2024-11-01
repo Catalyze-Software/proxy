@@ -79,7 +79,7 @@ impl RewardBufferStore {
 
     pub fn notify_first_group_joined(principal: Principal) {
         let activity: RewardableActivity =
-            RewardableActivity::new(Activity::UserProfileFilled(principal));
+            RewardableActivity::new(Activity::FirstGroupJoined(principal));
         let _ = RewardBufferStore::insert(activity);
     }
 }

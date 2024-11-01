@@ -31,11 +31,25 @@ use ic_cdk::{caller, query, update};
 /// # Note
 /// This function is guarded by the [`is_not_anonymous`](is_not_anonymous) function.
 #[update(guard = "is_not_anonymous")]
-pub fn add_profile(
+pub fn add_profile(post_profile: PostProfile) -> Result<ProfileResponse, ApiError> {
+    ProfileCalls::add_profile(post_profile, None)
+}
+
+/// Adds a profile to the canister - [`[update]`](update)
+/// # Arguments
+/// * `post_profile` - The profile to add
+/// # Returns
+/// * `ProfileResponse` - The profile that was added
+/// # Errors
+/// * `ApiError` - If something went wrong while adding the profile
+/// # Note
+/// This function is guarded by the [`is_not_anonymous`](is_not_anonymous) function.
+#[update(guard = "is_not_anonymous")]
+pub fn add_profile_by_referral(
     post_profile: PostProfile,
-    referral: Option<Principal>,
+    referral: Principal,
 ) -> Result<ProfileResponse, ApiError> {
-    ProfileCalls::add_profile(post_profile, referral)
+    ProfileCalls::add_profile(post_profile, Some(referral))
 }
 
 /// Gets a profile by the given user principal - [`[query]`](query)

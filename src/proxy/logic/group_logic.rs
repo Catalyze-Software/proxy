@@ -447,7 +447,7 @@ impl GroupCalls {
         let member =
             GroupValidation::validate_member_join(caller(), group_id, &account_identifier).await?;
 
-        if member.joined.is_empty() {
+        if member.joined.iter().filter(|f| f.0 != &group_id).count() == 0 {
             RewardBufferStore::notify_first_group_joined(caller());
         }
 
