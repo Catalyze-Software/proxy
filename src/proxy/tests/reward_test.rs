@@ -6,6 +6,7 @@ use canister_types::models::{
     member::JoinedMemberResponse, privacy::Privacy, profile::PostProfile,
     profile_privacy::ProfilePrivacy,
 };
+use proxy::storage::reward_storage::FOUR_HOURS_IN_NANOS;
 use test_helper::{context::Context, sender::Sender, utils::generate_principal};
 
 #[test]
@@ -63,7 +64,9 @@ pub fn test_referrals() {
 
     assert!(!reward_buffer.is_empty());
 
-    context.pic.advance_time(Duration::from_secs(86500)); // 1 day
+    context
+        .pic
+        .advance_time(Duration::from_nanos(FOUR_HOURS_IN_NANOS + 1000));
     context.pic.tick();
 
     // get the reward buffer from the proxy
@@ -97,7 +100,9 @@ pub fn test_referrals() {
                 extra: format!("second_test_{}", i),
             },
         );
-        context.pic.advance_time(Duration::from_secs(86500)); // 1 day between each profile creation
+        context
+            .pic
+            .advance_time(Duration::from_nanos(FOUR_HOURS_IN_NANOS + 1000)); // profile creation on reward process interval
         context.pic.tick();
     }
 
