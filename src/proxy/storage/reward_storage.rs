@@ -12,7 +12,7 @@ use std::{cell::RefCell, time::Duration};
 
 // Interval for sending reward activities to Reward Canister
 pub const DAY_IN_NANOS: u64 = 86400 * 1_000_000_000;
-
+pub const FOUR_HOURS_IN_NANOS: u64 = 4 * 60 * 60 * 1_000_000_000;
 // timer to periodically process the reward buffer
 thread_local! {
    pub static REWARD_TIMER: RefCell<Option<u64>> = const { RefCell::new(None) };
@@ -22,11 +22,11 @@ pub struct RewardTimerStore;
 
 impl RewardTimerStore {
     pub fn start() {
-        let _ = set_timer_interval(Duration::from_nanos(DAY_IN_NANOS), move || {
+        let _ = set_timer_interval(Duration::from_nanos(FOUR_HOURS_IN_NANOS), move || {
             spawn(send_reward_data());
         });
 
-        let next_trigger = time() + DAY_IN_NANOS;
+        let next_trigger = time() + FOUR_HOURS_IN_NANOS;
 
         REWARD_TIMER.with(|t| *t.borrow_mut() = Some(next_trigger));
     }
@@ -37,7 +37,7 @@ impl RewardTimerStore {
 
     pub fn set_next_trigger() {
         REWARD_TIMER.with(|t| {
-            let next_trigger = time() + DAY_IN_NANOS;
+            let next_trigger = time() + FOUR_HOURS_IN_NANOS;
             *t.borrow_mut() = Some(next_trigger);
         });
     }
@@ -67,11 +67,6 @@ impl RewardBufferStore {
         let _ = RewardBufferStore::insert(activity);
     }
 
-    pub fn notify_active_user(principal: Principal) {
-        let activity = RewardableActivity::new(Activity::UserActivity(principal));
-        let _ = RewardBufferStore::insert(activity);
-    }
-
     pub fn notify_referral_used(principal: Principal) {
         let activity = RewardableActivity::new(Activity::UserReferral(principal));
         let _ = RewardBufferStore::insert(activity);
@@ -84,7 +79,7 @@ impl RewardBufferStore {
 
     pub fn notify_first_group_joined(principal: Principal) {
         let activity: RewardableActivity =
-            RewardableActivity::new(Activity::UserProfileFilled(principal));
+            RewardableActivity::new(Activity::FirstGroupJoined(principal));
         let _ = RewardBufferStore::insert(activity);
     }
 }

@@ -7,7 +7,7 @@ use ic_websocket_cdk::{
     send, OnCloseCallbackArgs, OnMessageCallbackArgs, OnOpenCallbackArgs, WsHandlers, WsInitParams,
 };
 
-use crate::storage::{RewardBufferStore, StorageQueryable, UserNotificationStore};
+use crate::storage::{StorageQueryable, UserNotificationStore};
 
 thread_local! {
    pub static CONNECTED_CLIENTS: RefCell<HashMap<Principal, u64>> = RefCell::new(HashMap::new());
@@ -31,8 +31,6 @@ impl Websocket {
 
     pub fn on_open(args: OnOpenCallbackArgs) {
         Self::add_connected_to_clients(args.client_principal);
-
-        RewardBufferStore::notify_active_user(args.client_principal);
 
         let (_, notification_ids) = UserNotificationStore::get(args.client_principal)
             .unwrap_or((args.client_principal, UserNotifications::new()));

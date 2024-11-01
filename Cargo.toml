@@ -1,5 +1,5 @@
 [workspace]
-members = ["src/proxy", "src/canister_types"]
+members = ["src/proxy", "src/canister_types", "src/test_helper"]
 resolver = "2"
 
 [workspace.dependencies]
@@ -9,4 +9,4 @@ ic-stable-structures = "0.6"
 serde = "1.0"
 serde_json = "1.0"
 ic-ledger-types = "0.13"
-
+pocket-ic = "5.0.0"

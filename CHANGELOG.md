@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- test for rewards
+- `add_profile_by_referral` call
+- change reward logic to account for reward canister changes
 - add first group join reward
 
 ### Changes
