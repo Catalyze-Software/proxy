@@ -1,5 +1,3 @@
-use std::{env, path::PathBuf};
-
 use candid::{encode_args, CandidType, Decode, Principal};
 
 use canister_types::models::{
