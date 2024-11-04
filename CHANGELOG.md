@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- `has_access` for `get_profiles`
 - Custom logic for getting events by start date
 
 ## [0.2.10]

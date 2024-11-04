@@ -164,7 +164,7 @@ impl ProfileCalls {
             return Self::get_profile(id);
         };
 
-        Err(ApiError::not_found().add_message("Group not found"))
+        Err(ApiError::not_found().add_message("profile not found"))
     }
 
     pub fn get_profiles(principals: Vec<Principal>) -> Vec<ProfileResponse> {

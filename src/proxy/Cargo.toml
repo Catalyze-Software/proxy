@@ -25,3 +25,4 @@ canister_types = { path = "../canister_types" }
 
 [dev-dependencies]
 test_helper = { path = "../test_helper" }
+csv = "1.1"

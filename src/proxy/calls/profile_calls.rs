@@ -59,9 +59,7 @@ pub fn add_profile_by_referral(
 /// * `ProfileResponse` - The profile that was found
 /// # Errors
 /// * `ApiError` - If something went wrong while getting the profile
-/// # Note
-/// This function is guarded by the [`has_access`](has_access) function.
-#[query(guard = "has_access")]
+#[query]
 pub fn get_profile(principal: Principal) -> Result<ProfileResponse, ApiError> {
     ProfileCalls::get_profile(principal)
 }

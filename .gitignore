@@ -19,5 +19,8 @@ src/declarations/
 node_modules/
 dist/
 
+*.json
+*.csv
+
 # scripts
 scripts/propose_upgrade_prod.sh
