@@ -73,6 +73,5 @@ runs:
       shell: bash
       if: ${{ inputs.gzip == 'true' }}
       run: |
-        mkdir wasm
         gzip -c target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm > wasm/${{ inputs.package }}_${{ inputs.version }}.wasm.gz
         cp target/wasm32-unknown-unknown/release/${{ inputs.package }}.wasm wasm/${{ inputs.package }}_${{ inputs.version }}.wasm
