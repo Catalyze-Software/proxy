@@ -37,6 +37,7 @@ pub fn process_buffer() -> RewardDataPackage {
             Activity::UserReferral(principal) => user_referrals.push(principal),
             Activity::UserProfileFilled(principal) => filled_profiles.push(principal),
             Activity::FirstGroupJoined(principal) => first_group_joined.push(principal),
+            Activity::None => {}
         }
     }
 

@@ -21,6 +21,9 @@ dist/
 
 *.json
 *.csv
+principals.candid
+
 
 # scripts
 scripts/propose_upgrade_prod.sh
+scripts/get_principals.sh

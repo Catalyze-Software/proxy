@@ -1,4 +1,5 @@
 type Activity = variant {
+  None;
   FirstGroupJoined : principal;
   UserReferral : principal;
   UserProfileFilled : principal;

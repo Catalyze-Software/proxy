@@ -50,8 +50,10 @@ pub struct RewardableActivityResponse {
     pub timestamp: u64,
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
+#[derive(Clone, Debug, CandidType, Deserialize, Serialize, Default)]
 pub enum Activity {
+    #[default]
+    None,
     GroupMemberCount(u64),
     UserReferral(Principal),
     UserProfileFilled(Principal),
@@ -64,13 +66,14 @@ impl Activity {
     }
 
     pub fn decode(bytes: Vec<u8>) -> Self {
-        Decode!(&bytes, Activity).unwrap()
+        Decode!(&bytes, Activity).unwrap_or_default()
     }
 }
 
 impl fmt::Display for Activity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            Activity::None => write!(f, "none"),
             Activity::GroupMemberCount(_) => write!(f, "group_member_count"),
             Activity::UserReferral(_) => write!(f, "user_referral"),
             Activity::UserProfileFilled(_) => write!(f, "user_profile_filled"),
