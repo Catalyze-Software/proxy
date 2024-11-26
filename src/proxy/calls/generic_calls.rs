@@ -13,6 +13,7 @@ use candid::Principal;
 use canister_types::models::{
     api_error::ApiError,
     http_types::{HttpRequest, HttpResponse},
+    icrc28_trusted_origin::Icrc28TrustedOriginsResponse,
 };
 use ic_cdk::{
     api::{
@@ -46,6 +47,17 @@ fn icts_name() -> String {
 #[query]
 fn icts_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
+}
+
+#[update]
+fn icrc28_trusted_origins() -> Icrc28TrustedOriginsResponse {
+    let trusted_origins = vec![
+        String::from("https://www.catalyze.one"),
+        String::from("https://catalyze.live"),
+        String::from("https://h4xrq-fiaaa-aaaal-ajecq-cai.icp0.io"),
+    ];
+
+    Icrc28TrustedOriginsResponse { trusted_origins }
 }
 
 #[query(guard = "is_developer")]

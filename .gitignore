@@ -27,3 +27,11 @@ principals.candid
 # scripts
 scripts/propose_upgrade_prod.sh
 scripts/get_principals.sh
+
+scripts/alpha_holders.candid
+scripts/converted_combined_holders.candid
+scripts/funded_cvs_to_principal.sh
+scripts/funded_holders.candid
+scripts/get_alpha_holders.sh
+scripts/process_profiles.sh
+scripts/profiles.candid

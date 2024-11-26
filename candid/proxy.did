@@ -311,6 +311,7 @@ type HttpResponse = record {
   body : blob;
   headers : vec HttpHeader;
 };
+type Icrc28TrustedOriginsResponse = record { trusted_origins : vec text };
 type InviteAttendeeResponse = record {
   "principal" : principal;
   invite_type : InviteType;
@@ -920,6 +921,7 @@ service : () -> {
   get_ws_errors : () -> (vec record { nat64; text }) query;
   get_ws_url : () -> (text) query;
   http_request : (HttpRequest) -> (HttpResponse) query;
+  icrc28_trusted_origins : () -> (Icrc28TrustedOriginsResponse);
   icts_name : () -> (text) query;
   icts_version : () -> (text) query;
   invite_to_event : (nat64, nat64, principal) -> (Result_34);

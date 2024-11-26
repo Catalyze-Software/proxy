@@ -28,6 +28,7 @@ pub mod attendee;
 pub mod event;
 pub mod friend_request;
 pub mod group;
+pub mod icrc28_trusted_origin;
 pub mod invite_type;
 pub mod member;
 pub mod profile;
